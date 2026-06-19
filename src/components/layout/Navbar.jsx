@@ -1,14 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
-import { Droplet, LogOut, User } from "lucide-react";
+import { useMemo } from "react";
+import {
+  Droplet, LogOut, User, Home, UserPlus, LogIn,
+} from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
-import { NAV_LINKS } from "@/config/constants";
+import { useMenuStore } from "@/stores/menuStore";
+
+const iconMap = {
+  Home, UserPlus, LogIn,
+};
 
 export function Navbar() {
   const { pathname } = useLocation();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated, logout, user, role } = useAuthStore();
+  const getTopbar = useMenuStore((s) => s.getTopbar);
 
-  const role = user?.role || "public";
-  const links = NAV_LINKS[role] || NAV_LINKS.public;
+  const links = useMemo(() => {
+    const userRole = isAuthenticated && role ? role : null;
+    return getTopbar(userRole);
+  }, [getTopbar, isAuthenticated, role]);
 
   return (
     <nav className="bg-red-600 text-white shadow">
@@ -20,30 +30,38 @@ export function Navbar() {
 
         <div className="flex items-center gap-1">
           {!isAuthenticated ? (
-            links.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`rounded-md px-3 py-1.5 text-sm transition hover:bg-red-700 ${
-                  pathname === to ? "bg-red-700" : ""
-                }`}
-              >
-                {label}
-              </Link>
-            ))
-          ) : (
-            <>
-              {links.slice(0, 4).map(({ to, label }) => (
+            links.map(({ key, route, label, icon }) => {
+              const Icon = iconMap[icon];
+              return (
                 <Link
-                  key={to}
-                  to={to}
-                  className={`rounded-md px-3 py-1.5 text-sm transition hover:bg-red-700 ${
-                    pathname === to ? "bg-red-700" : ""
+                  key={key}
+                  to={route}
+                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition hover:bg-red-700 ${
+                    pathname === route ? "bg-red-700" : ""
                   }`}
                 >
+                  {Icon && <Icon className="size-4" />}
                   {label}
                 </Link>
-              ))}
+              );
+            })
+          ) : (
+            <>
+              {links.slice(0, 4).map(({ key, route, label, icon }) => {
+                const Icon = iconMap[icon];
+                return (
+                  <Link
+                    key={key}
+                    to={route}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition hover:bg-red-700 ${
+                      pathname === route ? "bg-red-700" : ""
+                    }`}
+                  >
+                    {Icon && <Icon className="size-4" />}
+                    {label}
+                  </Link>
+                );
+              })}
               <div className="ml-3 flex items-center gap-2 border-l border-red-400 pl-3">
                 <User className="size-4" />
                 <span className="text-sm">{user?.name || "User"}</span>

@@ -1,27 +1,21 @@
 import { NavLink } from "react-router-dom";
+import { useMemo } from "react";
 import {
-  LayoutDashboard,
-  Edit,
-  Search,
-  FileText,
-  History,
-  Bell,
-  LogOut,
-  Droplet,
+  LayoutDashboard, Edit, Search, FileText, History, Bell,
+  LogOut, Droplet,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
+import { useMenuStore } from "@/stores/menuStore";
 
-const sidebarLinks = [
-  { to: "/donor", icon: LayoutDashboard, label: "Dashboard", end: true },
-  { to: "/donor/edit-profile", icon: Edit, label: "Edit Profile" },
-  { to: "/donor/search-banks", icon: Search, label: "Search Banks" },
-  { to: "/donor/medical-reports", icon: FileText, label: "Medical Reports" },
-  { to: "/donor/donation-history", icon: History, label: "Donation History" },
-  { to: "/donor/notifications", icon: Bell, label: "Notifications" },
-];
+const iconMap = {
+  LayoutDashboard, Edit, Search, FileText, History, Bell,
+};
 
 export function DonorLayout({ children }) {
-  const { user, logout } = useAuthStore();
+  const { user, role, logout } = useAuthStore();
+  const getSidebar = useMenuStore((s) => s.getSidebar);
+
+  const sidebar = useMemo(() => getSidebar(role), [getSidebar, role]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -32,21 +26,24 @@ export function DonorLayout({ children }) {
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {sidebarLinks.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
-                  isActive ? "bg-red-600 text-white" : "text-gray-300 hover:bg-gray-800 hover:text-white"
-                }`
-              }
-            >
-              <Icon className="size-4 shrink-0" />
-              {label}
-            </NavLink>
-          ))}
+          {sidebar.map(({ key, route, label, icon, end }) => {
+            const Icon = iconMap[icon];
+            return (
+              <NavLink
+                key={key}
+                to={route}
+                end={end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
+                    isActive ? "bg-red-600 text-white" : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  }`
+                }
+              >
+                {Icon && <Icon className="size-4 shrink-0" />}
+                {label}
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div className="border-t border-gray-700 px-3 py-3">

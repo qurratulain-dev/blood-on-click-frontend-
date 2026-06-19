@@ -9,8 +9,8 @@ export function useRegister() {
   return useMutation({
     mutationFn: registerUser,
     onSuccess: (response) => {
-      const { user, token } = response.data;
-      setAuth(user, token);
+      const { user, role, token } = response.data;
+      setAuth(user, token, role);
       toast.success("Registration successful!");
     },
     onError: (error) => {

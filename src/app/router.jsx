@@ -4,10 +4,22 @@ import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BloodBankLayout } from "@/components/layout/BloodBankLayout";
 import { DonorLayout } from "@/components/layout/DonorLayout";
 import { SeekerLayout } from "@/components/layout/SeekerLayout";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { HomePage } from "@/features/landing/components/HomePage";
 import { RegisterPage } from "@/features/auth/components/registration/RegisterPage";
 import { LoginPage } from "@/features/auth/components/login/LoginPage";
 import { AdminDashboard } from "@/features/admin/components/AdminDashboard";
+import { AddUser } from "@/features/admin/components/AddUser";
+import { AssessmentsList } from "@/features/admin/components/AssessmentsList";
+import { NewAssessment } from "@/features/admin/components/NewAssessment";
+import { ViewAssessment } from "@/features/admin/components/ViewAssessment";
+import { GenerateReport } from "@/features/admin/components/GenerateReport";
+import { ManageDonations } from "@/features/admin/components/ManageDonations";
+import { ManageUsers } from "@/features/admin/components/ManageUsers";
+import { RecommendBloodBank } from "@/features/admin/components/RecommendBloodBank";
+import { BloodBankDashboard } from "@/features/bloodBank/components/BloodBankDashboard";
+import { DonorDashboard } from "@/features/donor/components/DonorDashboard";
+import { SeekerDashboard } from "@/features/seeker/components/SeekerDashboard";
 
 const router = createBrowserRouter([
   {
@@ -24,28 +36,34 @@ const router = createBrowserRouter([
   },
   {
     element: (
-      <AdminLayout>
-        <Outlet />
-      </AdminLayout>
+      <ProtectedRoute role="Admin">
+        <AdminLayout>
+          <Outlet />
+        </AdminLayout>
+      </ProtectedRoute>
     ),
     children: [
       { path: "/admin", element: <AdminDashboard /> },
-      { path: "/admin/users/add", element: <AdminDashboard /> },
-      { path: "/admin/users", element: <AdminDashboard /> },
-      { path: "/admin/donations", element: <AdminDashboard /> },
-      { path: "/admin/assessments", element: <AdminDashboard /> },
-      { path: "/admin/assessments/new", element: <AdminDashboard /> },
-      { path: "/admin/recommend-bank", element: <AdminDashboard /> },
+      { path: "/admin/users/add", element: <AddUser /> },
+      { path: "/admin/users", element: <ManageUsers /> },
+      { path: "/admin/donations", element: <ManageDonations /> },
+      { path: "/admin/donations/:id/report", element: <GenerateReport /> },
+      { path: "/admin/assessments", element: <AssessmentsList /> },
+      { path: "/admin/assessments/new", element: <NewAssessment /> },
+      { path: "/admin/assessments/:id", element: <ViewAssessment /> },
+      { path: "/admin/recommend-bank", element: <RecommendBloodBank /> },
     ],
   },
   {
     element: (
-      <BloodBankLayout>
-        <Outlet />
-      </BloodBankLayout>
+      <ProtectedRoute role="Blood Bank">
+        <BloodBankLayout>
+          <Outlet />
+        </BloodBankLayout>
+      </ProtectedRoute>
     ),
     children: [
-      { path: "/blood-bank", element: <div className="p-8 text-center text-gray-500">Blood Bank Dashboard</div> },
+      { path: "/blood-bank", element: <BloodBankDashboard /> },
       { path: "/blood-bank/edit-profile", element: <div className="p-8 text-center text-gray-500">Edit Profile</div> },
       { path: "/blood-bank/manage-stock", element: <div className="p-8 text-center text-gray-500">Manage Stock</div> },
       { path: "/blood-bank/view-requests", element: <div className="p-8 text-center text-gray-500">View Requests</div> },
@@ -55,12 +73,14 @@ const router = createBrowserRouter([
   },
   {
     element: (
-      <DonorLayout>
-        <Outlet />
-      </DonorLayout>
+      <ProtectedRoute role="Donor">
+        <DonorLayout>
+          <Outlet />
+        </DonorLayout>
+      </ProtectedRoute>
     ),
     children: [
-      { path: "/donor", element: <div className="p-8 text-center text-gray-500">Donor Dashboard</div> },
+      { path: "/donor", element: <DonorDashboard /> },
       { path: "/donor/edit-profile", element: <div className="p-8 text-center text-gray-500">Edit Profile</div> },
       { path: "/donor/search-banks", element: <div className="p-8 text-center text-gray-500">Search Banks</div> },
       { path: "/donor/medical-reports", element: <div className="p-8 text-center text-gray-500">Medical Reports</div> },
@@ -70,12 +90,14 @@ const router = createBrowserRouter([
   },
   {
     element: (
-      <SeekerLayout>
-        <Outlet />
-      </SeekerLayout>
+      <ProtectedRoute role="Seeker">
+        <SeekerLayout>
+          <Outlet />
+        </SeekerLayout>
+      </ProtectedRoute>
     ),
     children: [
-      { path: "/seeker", element: <div className="p-8 text-center text-gray-500">Seeker Dashboard</div> },
+      { path: "/seeker", element: <SeekerDashboard /> },
       { path: "/seeker/search-donors", element: <div className="p-8 text-center text-gray-500">Search Donors</div> },
       { path: "/seeker/search-banks", element: <div className="p-8 text-center text-gray-500">Search Banks</div> },
       { path: "/seeker/notifications", element: <div className="p-8 text-center text-gray-500">Notifications</div> },

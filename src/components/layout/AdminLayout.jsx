@@ -1,34 +1,23 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { useMemo } from "react";
 import {
-  LayoutDashboard,
-  UserPlus,
-  Users,
-  HandHelping,
-  ClipboardList,
-  PlusCircle,
-  List,
-  Hospital,
-  LogOut,
-  Droplet,
-  Bell,
-  Clock,
+  LayoutDashboard, UserPlus, Users, HandHelping,
+  ClipboardList, PlusCircle, List, Hospital,
+  LogOut, Droplet,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
+import { useMenuStore } from "@/stores/menuStore";
 
-const sidebarLinks = [
-  { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
-  { to: "/admin/users/add", icon: UserPlus, label: "Add User" },
-  { to: "/admin/users", icon: Users, label: "Manage Users" },
-  { to: "/admin/donations", icon: HandHelping, label: "Manage Donations" },
-  { to: "/admin/assessments", icon: ClipboardList, label: "Assessments" },
-  { to: "/admin/assessments/new", icon: PlusCircle, label: "New Assessment" },
-  { to: "/admin/assessments", icon: List, label: "View Assessments" },
-  { to: "/admin/recommend-bank", icon: Hospital, label: "Recommend Bank" },
-];
+const iconMap = {
+  LayoutDashboard, UserPlus, Users, HandHelping,
+  ClipboardList, PlusCircle, List, Hospital,
+};
 
 export function AdminLayout({ children }) {
-  const { pathname } = useLocation();
-  const { user, logout } = useAuthStore();
+  const { user, role, logout } = useAuthStore();
+  const getSidebar = useMenuStore((s) => s.getSidebar);
+
+  const sidebar = useMemo(() => getSidebar(role), [getSidebar, role]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -39,21 +28,24 @@ export function AdminLayout({ children }) {
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {sidebarLinks.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
-                  isActive ? "bg-red-600 text-white" : "text-gray-300 hover:bg-gray-800 hover:text-white"
-                }`
-              }
-            >
-              <Icon className="size-4 shrink-0" />
-              {label}
-            </NavLink>
-          ))}
+          {sidebar.map(({ key, route, label, icon, end }) => {
+            const Icon = iconMap[icon];
+            return (
+              <NavLink
+                key={key}
+                to={route}
+                end={end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
+                    isActive ? "bg-red-600 text-white" : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  }`
+                }
+              >
+                {Icon && <Icon className="size-4 shrink-0" />}
+                {label}
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div className="border-t border-gray-700 px-3 py-3">

@@ -1,23 +1,21 @@
 import { NavLink } from "react-router-dom";
+import { useMemo } from "react";
 import {
-  LayoutDashboard,
-  Search,
-  Hospital,
-  Bell,
-  LogOut,
-  Droplet,
+  LayoutDashboard, Search, Hospital, Bell,
+  LogOut, Droplet,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
+import { useMenuStore } from "@/stores/menuStore";
 
-const sidebarLinks = [
-  { to: "/seeker", icon: LayoutDashboard, label: "Dashboard", end: true },
-  { to: "/seeker/search-donors", icon: Search, label: "Search Donors" },
-  { to: "/seeker/search-banks", icon: Hospital, label: "Search Banks" },
-  { to: "/seeker/notifications", icon: Bell, label: "Notifications" },
-];
+const iconMap = {
+  LayoutDashboard, Search, Hospital, Bell,
+};
 
 export function SeekerLayout({ children }) {
-  const { user, logout } = useAuthStore();
+  const { user, role, logout } = useAuthStore();
+  const getSidebar = useMenuStore((s) => s.getSidebar);
+
+  const sidebar = useMemo(() => getSidebar(role), [getSidebar, role]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -28,21 +26,24 @@ export function SeekerLayout({ children }) {
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {sidebarLinks.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
-                  isActive ? "bg-red-600 text-white" : "text-gray-300 hover:bg-gray-800 hover:text-white"
-                }`
-              }
-            >
-              <Icon className="size-4 shrink-0" />
-              {label}
-            </NavLink>
-          ))}
+          {sidebar.map(({ key, route, label, icon, end }) => {
+            const Icon = iconMap[icon];
+            return (
+              <NavLink
+                key={key}
+                to={route}
+                end={end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
+                    isActive ? "bg-red-600 text-white" : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                  }`
+                }
+              >
+                {Icon && <Icon className="size-4 shrink-0" />}
+                {label}
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div className="border-t border-gray-700 px-3 py-3">

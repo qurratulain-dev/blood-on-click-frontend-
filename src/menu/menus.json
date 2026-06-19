@@ -1,0 +1,41 @@
+{
+  "topbar": [
+    { "key": "home", "label": "Home", "route": "/", "icon": "Home", "roles": ["*"] },
+    { "key": "register", "label": "Register", "route": "/register", "icon": "UserPlus", "roles": ["guest"] },
+    { "key": "login", "label": "Login", "route": "/login", "icon": "LogIn", "roles": ["guest"] }
+  ],
+  "sidebar": {
+    "Admin": [
+      { "key": "dashboard", "label": "Dashboard", "route": "/admin", "icon": "LayoutDashboard", "end": true },
+      { "key": "add-user", "label": "Add User", "route": "/admin/users/add", "icon": "UserPlus" },
+      { "key": "manage-users", "label": "Manage Users", "route": "/admin/users", "icon": "Users" },
+      { "key": "manage-donations", "label": "Manage Donations", "route": "/admin/donations", "icon": "HandHelping" },
+      { "key": "assessments", "label": "Assessments", "route": "/admin/assessments", "icon": "ClipboardList" },
+      { "key": "new-assessment", "label": "New Assessment", "route": "/admin/assessments/new", "icon": "PlusCircle" },
+      { "key": "view-assessments", "label": "View Assessments", "route": "/admin/assessments", "icon": "List" },
+      { "key": "recommend-bank", "label": "Recommend Bank", "route": "/admin/recommend-bank", "icon": "Hospital" }
+    ],
+    "Donor": [
+      { "key": "dashboard", "label": "Dashboard", "route": "/donor", "icon": "LayoutDashboard", "end": true },
+      { "key": "edit-profile", "label": "Edit Profile", "route": "/donor/edit-profile", "icon": "Edit" },
+      { "key": "search-banks", "label": "Search Banks", "route": "/donor/search-banks", "icon": "Search" },
+      { "key": "medical-reports", "label": "Medical Reports", "route": "/donor/medical-reports", "icon": "FileText" },
+      { "key": "donation-history", "label": "Donation History", "route": "/donor/donation-history", "icon": "History" },
+      { "key": "notifications", "label": "Notifications", "route": "/donor/notifications", "icon": "Bell" }
+    ],
+    "Blood Bank": [
+      { "key": "dashboard", "label": "Dashboard", "route": "/blood-bank", "icon": "LayoutDashboard", "end": true },
+      { "key": "edit-profile", "label": "Edit Profile", "route": "/blood-bank/edit-profile", "icon": "Edit" },
+      { "key": "manage-stock", "label": "Manage Stock", "route": "/blood-bank/manage-stock", "icon": "Package" },
+      { "key": "view-requests", "label": "View Requests", "route": "/blood-bank/view-requests", "icon": "ClipboardList" },
+      { "key": "notifications", "label": "Notifications", "route": "/blood-bank/notifications", "icon": "Bell" },
+      { "key": "reports", "label": "Reports", "route": "/blood-bank/reports", "icon": "BarChart3" }
+    ],
+    "Seeker": [
+      { "key": "dashboard", "label": "Dashboard", "route": "/seeker", "icon": "LayoutDashboard", "end": true },
+      { "key": "search-donors", "label": "Search Donors", "route": "/seeker/search-donors", "icon": "Search" },
+      { "key": "search-banks", "label": "Search Banks", "route": "/seeker/search-banks", "icon": "Hospital" },
+      { "key": "notifications", "label": "Notifications", "route": "/seeker/notifications", "icon": "Bell" }
+    ]
+  }
+}
