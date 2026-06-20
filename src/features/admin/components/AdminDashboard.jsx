@@ -1,42 +1,15 @@
 import { useAdminDashboard } from "@/features/admin/hooks/useAdminDashboard";
-import { BLOOD_GROUPS } from "@/config/constants";
-import { Users, Building2, Heart, Droplet, Clock, AlertCircle, CheckCircle } from "lucide-react";
-import { Loader2 } from "lucide-react";
-
-const groupColors = {
-  "A+": "bg-red-100 text-red-800",
-  "A-": "bg-pink-100 text-pink-800",
-  "B+": "bg-orange-100 text-orange-800",
-  "B-": "bg-amber-100 text-amber-800",
-  "AB+": "bg-purple-100 text-purple-800",
-  "AB-": "bg-violet-100 text-violet-800",
-  "O+": "bg-green-100 text-green-800",
-  "O-": "bg-teal-100 text-teal-800",
-};
-
-function StatCard({ icon: Icon, label, value, sub }) {
-  return (
-    <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <div className="flex items-center gap-3">
-        <div className="flex size-12 items-center justify-center rounded-full bg-red-50">
-          <Icon className="size-6 text-red-600" />
-        </div>
-        <div>
-          <p className="text-2xl font-bold">{value ?? "—"}</p>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          {sub && <p className="text-xs text-muted-foreground">{sub}</p>}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { BLOOD_GROUPS, GROUP_COLORS } from "@/config/constants";
+import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { Users, Building2, Heart, Droplet, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 
 function DonationRow({ d }) {
   return (
     <tr className="border-b text-sm last:border-0 hover:bg-gray-50">
       <td className="py-2.5 pl-4">{d.donor_name}</td>
       <td className="py-2.5">
-        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${groupColors[d.blood_group] || "bg-gray-100 text-gray-800"}`}>
+        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GROUP_COLORS[d.blood_group] || "bg-gray-100 text-gray-800"}`}>
           {d.blood_group}
         </span>
       </td>
@@ -44,15 +17,7 @@ function DonationRow({ d }) {
       <td className="py-2.5">{d.quantity}</td>
       <td className="py-2.5">{d.donation_date}</td>
       <td className="py-2.5 pr-4">
-        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-          d.status === "completed" ? "bg-green-100 text-green-800" :
-          d.status === "pending" ? "bg-yellow-100 text-yellow-800" :
-          "bg-gray-100 text-gray-800"
-        }`}>
-          {d.status === "completed" && <CheckCircle className="size-3" />}
-          {d.status === "pending" && <Clock className="size-3" />}
-          {d.status}
-        </span>
+        <StatusBadge status={d.status} />
       </td>
     </tr>
   );
@@ -82,18 +47,22 @@ export function AdminDashboard() {
     data.stock_summary.forEach((s) => { stockMap[s.blood_group] = s.total; });
   }
 
+  const stockStatus = (qty) => {
+    if (qty >= 50) return "Adequate";
+    if (qty >= 20) return "Moderate";
+    return "Low";
+  };
+
   return (
     <div className="mx-auto max-w-6xl">
       <h2 className="mb-1 text-2xl font-bold">Admin Dashboard</h2>
       <hr className="mb-6" />
 
-      {/* Stats Grid */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {stats.map((s) => <StatCard key={s.label} {...s} />)}
+        {stats.map((s) => <DashboardStatCard key={s.label} {...s} />)}
       </div>
 
       <div className="mb-8 grid gap-6 lg:grid-cols-2">
-        {/* Blood Stock Summary */}
         <div className="rounded-xl border bg-white shadow-sm">
           <div className="border-b bg-red-50 px-5 py-3">
             <h5 className="flex items-center gap-2 font-semibold text-red-800">
@@ -113,20 +82,16 @@ export function AdminDashboard() {
               <tbody>
                 {BLOOD_GROUPS.map((bg) => {
                   const qty = stockMap[bg] || 0;
-                  let status = qty >= 50 ? "Adequate" : qty >= 20 ? "Moderate" : "Low";
-                  let statusColor = qty >= 50 ? "bg-green-100 text-green-800" : qty >= 20 ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800";
                   return (
                     <tr key={bg} className="border-b text-sm last:border-0 hover:bg-gray-50">
                       <td className="py-2.5">
-                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${groupColors[bg] || "bg-gray-100 text-gray-800"}`}>
+                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GROUP_COLORS[bg] || "bg-gray-100 text-gray-800"}`}>
                           {bg}
                         </span>
                       </td>
                       <td className="py-2.5 font-medium">{qty} units</td>
                       <td className="py-2.5">
-                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusColor}`}>
-                          {status}
-                        </span>
+                        <StatusBadge status={stockStatus(qty)} />
                       </td>
                     </tr>
                   );
@@ -136,7 +101,6 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        {/* Recent Donations */}
         <div className="rounded-xl border bg-white shadow-sm">
           <div className="border-b bg-red-50 px-5 py-3">
             <h5 className="flex items-center gap-2 font-semibold text-red-800">

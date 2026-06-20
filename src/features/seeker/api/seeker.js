@@ -35,3 +35,11 @@ export function getNotifications() {
 export function markNotificationRead(id) {
   return api.put(`/seeker/notifications/${id}/read`);
 }
+
+export function markAllNotificationsRead() {
+  return api.put("/seeker/notifications/read-all");
+}
+
+export function deleteNotification(id) {
+  return api.delete(`/seeker/notifications/${id}`);
+}

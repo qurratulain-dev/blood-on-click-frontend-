@@ -34,10 +34,24 @@ export function uploadMedicalReport(data) {
   });
 }
 
+export function uploadDonationReport(donationId, data) {
+  return api.post(`/donor/donations/${donationId}/upload-report`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
 export function getNotifications() {
   return api.get("/donor/notifications");
 }
 
 export function markNotificationRead(id) {
   return api.put(`/donor/notifications/${id}/read`);
+}
+
+export function markAllNotificationsRead() {
+  return api.put("/donor/notifications/read-all");
+}
+
+export function deleteNotification(id) {
+  return api.delete(`/donor/notifications/${id}`);
 }

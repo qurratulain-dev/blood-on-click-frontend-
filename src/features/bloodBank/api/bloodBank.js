@@ -36,6 +36,6 @@ export function markNotificationRead(id) {
   return api.put(`/blood-bank/notifications/${id}/read`);
 }
 
-export function getReports() {
-  return api.get("/blood-bank/reports");
+export function getReports(params = {}) {
+  return api.get("/blood-bank/reports", { params });
 }
