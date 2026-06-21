@@ -30,6 +30,7 @@ import { SearchBanks } from "@/features/donor/components/SearchBanks";
 import { MedicalReports } from "@/features/donor/components/MedicalReports";
 import { Notifications as DonorNotifications } from "@/features/donor/components/Notifications";
 import { SeekerDashboard } from "@/features/seeker/components/SeekerDashboard";
+import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 import { SearchBanks as SeekerSearchBanks } from "@/features/seeker/components/SearchBanks";
 import { SearchDonors as SeekerSearchDonors } from "@/features/seeker/components/SearchDonors";
 import { Notifications as SeekerNotifications } from "@/features/seeker/components/Notifications";
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/register", element: <RegisterPage /> },
       { path: "/login", element: <LoginPage /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
   {

@@ -2,7 +2,10 @@ import { useBloodBankDashboard } from "@/features/bloodBank/hooks/useBloodBankDa
 import { BLOOD_GROUPS, GROUP_COLORS } from "@/config/constants";
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { Droplet, HeartHandshake, Clock, FlaskConical, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { Droplet, HeartHandshake, Clock, FlaskConical, Loader2 } from "lucide-react";
+
+const PIE_COLORS = ["#dc3545", "#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24", "#f6e58d", "#96ceb4", "#7fd1cc"];
 
 const stockStatus = (qty) => {
   if (qty < 10) return { label: "Critical", variant: "critical" };
@@ -85,44 +88,78 @@ export function BloodBankDashboard() {
         <div className="rounded-xl border bg-white shadow-sm">
           <div className="border-b bg-red-50 px-5 py-3">
             <h5 className="flex items-center gap-2 font-semibold text-red-800">
-              <Clock className="size-4" />
-              Recent Requests
+              <Droplet className="size-4" />
+              Stock Distribution
             </h5>
           </div>
           <div className="p-5">
-            {data?.recent_requests?.length > 0 ? (
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="border-b text-xs uppercase text-muted-foreground">
-                    <th className="pb-2 font-medium">Seeker</th>
-                    <th className="pb-2 font-medium">Group</th>
-                    <th className="pb-2 font-medium">Units</th>
-                    <th className="pb-2 font-medium">Date</th>
-                    <th className="pb-2 font-medium">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.recent_requests.map((r) => (
-                    <tr key={r.id} className="border-b text-sm last:border-0 hover:bg-gray-50">
-                      <td className="py-2.5">{r.seeker_name}</td>
-                      <td className="py-2.5">
-                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GROUP_COLORS[r.blood_group] || "bg-gray-100 text-gray-800"}`}>
-                          {r.blood_group}
-                        </span>
-                      </td>
-                      <td className="py-2.5">{r.quantity}</td>
-                      <td className="py-2.5">{r.requested_date}</td>
-                      <td className="py-2.5">
-                        <StatusBadge status={r.status} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {stockByGroup.length > 0 ? (
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={stockByGroup}
+                    dataKey="quantity"
+                    nameKey="blood_group"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    innerRadius={55}
+                    label={({ payload, percent }) => `${payload.blood_group} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {stockByGroup.map((entry, idx) => (
+                      <Cell key={entry.blood_group} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value, name) => [`${value} units`, name]} />
+                </PieChart>
+              </ResponsiveContainer>
             ) : (
-              <p className="py-8 text-center text-sm text-muted-foreground">No requests yet.</p>
+              <p className="py-12 text-center text-sm text-muted-foreground">No stock data available</p>
             )}
           </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border bg-white shadow-sm">
+        <div className="border-b bg-red-50 px-5 py-3">
+          <h5 className="flex items-center gap-2 font-semibold text-red-800">
+            <Clock className="size-4" />
+            Recent Requests
+          </h5>
+        </div>
+        <div className="p-5">
+          {data?.recent_requests?.length > 0 ? (
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b text-xs uppercase text-muted-foreground">
+                  <th className="pb-2 font-medium">Seeker</th>
+                  <th className="pb-2 font-medium">Group</th>
+                  <th className="pb-2 font-medium">Units</th>
+                  <th className="pb-2 font-medium">Date</th>
+                  <th className="pb-2 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.recent_requests.map((r) => (
+                  <tr key={r.id} className="border-b text-sm last:border-0 hover:bg-gray-50">
+                    <td className="py-2.5">{r.seeker_name}</td>
+                    <td className="py-2.5">
+                      <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GROUP_COLORS[r.blood_group] || "bg-gray-100 text-gray-800"}`}>
+                        {r.blood_group}
+                      </span>
+                    </td>
+                    <td className="py-2.5">{r.quantity}</td>
+                    <td className="py-2.5">{r.requested_date}</td>
+                    <td className="py-2.5">
+                      <StatusBadge status={r.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="py-8 text-center text-sm text-muted-foreground">No requests yet.</p>
+          )}
         </div>
       </div>
     </div>

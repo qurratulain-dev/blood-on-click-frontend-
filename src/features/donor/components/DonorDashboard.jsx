@@ -2,7 +2,8 @@ import { useDonorDashboard } from "@/features/donor/hooks/useDonorDashboard";
 import { GROUP_COLORS } from "@/config/constants";
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { Droplet, Heart, CalendarCheck, AlertTriangle, Shield, Clock, CheckCircle, Award, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Droplet, Heart, CalendarCheck, AlertTriangle, Shield, Clock, CheckCircle, Award, Loader2, ArrowRight } from "lucide-react";
 
 export function DonorDashboard() {
   const { data, isLoading } = useDonorDashboard();
@@ -168,6 +169,15 @@ export function DonorDashboard() {
           ) : (
             <p className="py-8 text-center text-sm text-muted-foreground">No donations yet. Visit a blood bank to make your first donation!</p>
           )}
+          <div className="mt-3 text-right">
+            <Link
+              to="/donor/donation-history"
+              className="inline-flex items-center gap-1 text-sm font-medium text-red-600 hover:text-red-800"
+            >
+              View Full History
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
         </div>
       </div>
 

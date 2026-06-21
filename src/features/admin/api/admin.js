@@ -49,12 +49,12 @@ export function getDonations(status) {
   return api.get("/admin/donations", { params });
 }
 
-export function verifyDonation(id) {
-  return api.post(`/admin/donations/${id}/verify`);
+export function verifyDonation(id, admin_message = "") {
+  return api.post(`/admin/donations/${id}/verify`, { admin_message });
 }
 
-export function rejectDonation(id) {
-  return api.post(`/admin/donations/${id}/reject`);
+export function rejectDonation(id, admin_message = "") {
+  return api.post(`/admin/donations/${id}/reject`, { admin_message });
 }
 
 export function moveToPending(id) {

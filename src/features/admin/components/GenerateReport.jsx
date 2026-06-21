@@ -128,9 +128,9 @@ export function GenerateReport() {
                   <tr className="border-b">
                     <td className="bg-gray-50 px-3 py-2 font-medium">Medical Report</td>
                     <td className="px-3 py-2">
-                      {donation.medical_report_path ? (
+                      {donation.has_medical_report ? (
                         <a
-                          href={`/storage/${donation.medical_report_path}`}
+                          href={donation.medical_report_url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 rounded bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100"

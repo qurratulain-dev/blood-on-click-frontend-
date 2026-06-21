@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { donorSchema, bloodBankSchema, seekerSchema } from "@/features/auth/schemas/register";
@@ -87,7 +87,7 @@ function DonorForm({ register: reg, errors }) {
       </div>
       <div className="sm:col-span-2">
         <label className="mb-1 block text-sm font-medium">Address</label>
-        <textarea rows={2} {...reg("address")} className="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 md:text-sm dark:bg-input/30" />
+        <textarea rows={5} {...reg("address")} className="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 md:text-sm dark:bg-input/30" />
         {errors.address && <p className="mt-1 text-xs text-red-500">{errors.address.message}</p>}
       </div>
     </div>
@@ -202,13 +202,25 @@ export function RegisterPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: schema ? zodResolver(schema) : undefined,
     defaultValues: { role_type: selectedRole },
   });
 
-  const onSubmit = (data) => mutate(data);
+  useEffect(() => {
+    if (selectedRole) {
+      setValue("role_type", selectedRole);
+    }
+  }, [selectedRole, setValue]);
+
+  const onSubmit = (data) => {
+    const payload = data.role_type === "blood_bank"
+      ? data
+      : { ...data, full_name: data.name };
+    mutate(payload);
+  };
 
   if (selectedRole) {
     const FormComponent = formComponents[selectedRole];

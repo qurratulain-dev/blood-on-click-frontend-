@@ -10,9 +10,8 @@
       { "key": "add-user", "label": "Add User", "route": "/admin/users/add", "icon": "UserPlus" },
       { "key": "manage-users", "label": "Manage Users", "route": "/admin/users", "icon": "Users" },
       { "key": "manage-donations", "label": "Manage Donations", "route": "/admin/donations", "icon": "HandHelping" },
-      { "key": "assessments", "label": "Assessments", "route": "/admin/assessments", "icon": "ClipboardList" },
+      { "key": "assessments", "label": "Assessments", "route": "/admin/assessments", "icon": "ClipboardList", "end": true },
       { "key": "new-assessment", "label": "New Assessment", "route": "/admin/assessments/new", "icon": "PlusCircle" },
-      { "key": "view-assessments", "label": "View Assessments", "route": "/admin/assessments", "icon": "List" },
       { "key": "recommend-bank", "label": "Recommend Bank", "route": "/admin/recommend-bank", "icon": "Hospital" }
     ],
     "Donor": [

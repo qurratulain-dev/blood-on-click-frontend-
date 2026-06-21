@@ -4,27 +4,27 @@ import { GROUP_COLORS } from "@/config/constants";
 import { StatusBadge } from "@/components/ui/status-badge";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line, Legend,
+  LineChart, Line,
 } from "recharts";
 import {
-  BarChart3, Droplet, Users, Activity, Loader2, Calendar, Download,
+  BarChart3, Droplet, Users, Activity, Loader2, Calendar, Filter,
 } from "lucide-react";
 import { useState } from "react";
 
-const CHART_COLORS = ["#dc3545", "#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24", "#f6e58d", "#96ceb4", "#7fd1cc"];
+const today = new Date().toISOString().split("T")[0];
+const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
 
 export function Reports() {
-  const today = new Date().toISOString().split("T")[0];
-  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0];
-
   const [dateRange, setDateRange] = useState({ from: firstOfMonth, to: today });
+  const [queryParams, setQueryParams] = useState({ from: firstOfMonth, to: today });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["blood-bank-reports", dateRange],
+    queryKey: ["blood-bank-reports", queryParams],
     queryFn: async () => {
-      const res = await getReports({ from: dateRange.from, to: dateRange.to });
+      const res = await getReports(queryParams);
       return res.data;
     },
+    staleTime: 5 * 60 * 1000,
   });
 
   const summaryCards = [
@@ -70,13 +70,20 @@ export function Reports() {
             />
           </div>
           <button
+            onClick={() => setQueryParams({ from: dateRange.from, to: dateRange.to })}
+            className="flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            <Filter className="size-4" />
+            Filter
+          </button>
+          <button
             onClick={() => {
               const end = new Date();
               const start = new Date(end.getFullYear(), end.getMonth(), 1);
-              setDateRange({
-                from: start.toISOString().split("T")[0],
-                to: end.toISOString().split("T")[0],
-              });
+              const f = start.toISOString().split("T")[0];
+              const t = end.toISOString().split("T")[0];
+              setDateRange({ from: f, to: t });
+              setQueryParams({ from: f, to: t });
             }}
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
           >
@@ -86,10 +93,10 @@ export function Reports() {
             onClick={() => {
               const end = new Date();
               const start = new Date(end.getFullYear() - 1, end.getMonth(), 1);
-              setDateRange({
-                from: start.toISOString().split("T")[0],
-                to: end.toISOString().split("T")[0],
-              });
+              const f = start.toISOString().split("T")[0];
+              const t = end.toISOString().split("T")[0];
+              setDateRange({ from: f, to: t });
+              setQueryParams({ from: f, to: t });
             }}
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
           >

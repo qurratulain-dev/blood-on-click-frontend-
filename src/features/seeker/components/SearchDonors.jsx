@@ -3,13 +3,13 @@ import { searchDonors, createRequest } from "@/features/seeker/api/seeker";
 import { BLOOD_GROUPS, GROUP_COLORS } from "@/config/constants";
 import { Loader2, Search, MapPin, Phone, User, Calendar, Weight, Droplet, Clock, X, AlertTriangle, Building2, Frown, SearchX } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export function SearchDonors() {
   const queryClient = useQueryClient();
   const [bloodGroup, setBloodGroup] = useState("");
   const [location, setLocation] = useState("");
-  const [searched, setSearched] = useState(false);
+  const [locationQuery, setLocationQuery] = useState("");
   const [showRequestModal, setShowRequestModal] = useState(null);
   const [requestForm, setRequestForm] = useState({
     quantity: "1",
@@ -20,16 +20,17 @@ export function SearchDonors() {
     notes: "",
   });
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["seeker-donors", bloodGroup, location],
-    queryFn: async () => {
-      if (!bloodGroup) return null;
-      const params = { blood_group: bloodGroup };
-      if (location) params.city = location;
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["seeker-donors", bloodGroup, locationQuery],
+    queryFn: async ({ queryKey }) => {
+      const [, bg, loc] = queryKey;
+      if (!bg) return null;
+      const params = { blood_group: bg };
+      if (loc) params.city = loc;
       const res = await searchDonors(params);
       return res.data;
     },
-    enabled: searched,
+    retry: 1,
   });
 
   const requestMutation = useMutation({
@@ -50,8 +51,7 @@ export function SearchDonors() {
       toast.error("Please select a blood group");
       return;
     }
-    setSearched(true);
-    queryClient.invalidateQueries({ queryKey: ["seeker-donors", bloodGroup, location] });
+    setLocationQuery(location);
   };
 
   const contactDonor = (phone) => {
@@ -123,24 +123,34 @@ export function SearchDonors() {
                 placeholder="e.g., Lahore, Gulberg"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleSearch(e); }}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
               />
             </div>
-            <div className="flex items-end">
+            <div className="flex items-end gap-2">
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
               >
                 <Search className="size-4" />
                 Search Donors
               </button>
+              {bloodGroup && (
+                <button
+                  type="button"
+                  onClick={() => { setBloodGroup(""); setLocation(""); setLocationQuery(""); }}
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                >
+                  Clear
+                </button>
+              )}
             </div>
           </div>
         </form>
       </div>
 
       {/* Donors Results */}
-      {searched && (
+      {bloodGroup && (
         <div className="rounded-xl border bg-white shadow-sm">
           <div className="border-b bg-blue-50 px-5 py-3">
             <h5 className="flex items-center gap-2 font-semibold text-blue-800">
@@ -149,7 +159,12 @@ export function SearchDonors() {
             </h5>
           </div>
           <div className="p-5">
-            {isLoading ? (
+            {isError ? (
+              <div className="flex flex-col items-center gap-3 py-16 text-center">
+                <AlertTriangle className="size-12 text-red-300" />
+                <p className="text-sm text-red-600">{error?.response?.data?.message || error?.message || "Failed to load donors"}</p>
+              </div>
+            ) : isLoading ? (
               <div className="flex items-center justify-center py-16">
                 <Loader2 className="size-8 animate-spin text-red-600" />
               </div>

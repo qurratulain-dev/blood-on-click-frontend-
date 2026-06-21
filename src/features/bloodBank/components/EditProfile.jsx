@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProfile, updateProfile } from "@/features/bloodBank/api/bloodBank";
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
-import { Building2, Phone, MapPin, FileText, Hash, Globe, Loader2, Save, ArrowLeft } from "lucide-react";
+import { Building2, Phone, MapPin, FileText, Hash, Globe, Loader2, Save, ArrowLeft, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 export function EditProfile() {
   const queryClient = useQueryClient();
@@ -61,12 +61,14 @@ export function EditProfile() {
   };
 
   const fields = [
-    { name: "bank_name", label: "Bank Name", icon: Building2, required: true, type: "text" },
-    { name: "phone", label: "Phone", icon: Phone, required: true, type: "text" },
-    { name: "registration_number", label: "Registration Number", icon: Hash, required: true, type: "text" },
-    { name: "license_number", label: "License Number", icon: FileText, required: true, type: "text" },
+    { name: "bank_name", label: "Bank Name", icon: Building2, required: true, type: "text", maxLength: 255 },
+    { name: "email", label: "Email", icon: Mail, required: false, type: "email", disabled: true },
+    { name: "phone", label: "Phone", icon: Phone, required: true, type: "text", maxLength: 20, colSpan: true },
+    { name: "registration_number", label: "Registration Number", icon: Hash, required: true, type: "text", maxLength: 255 },
+    { name: "license_number", label: "License Number", icon: FileText, required: false, type: "text", maxLength: 255 },
     { name: "latitude", label: "Latitude", icon: Globe, required: false, type: "number", step: "0.00000001", placeholder: "31.5497" },
     { name: "longitude", label: "Longitude", icon: Globe, required: false, type: "number", step: "0.00000001", placeholder: "74.3436" },
+    { name: "address", label: "Address", icon: MapPin, required: false, type: "textarea", colSpan: true },
   ];
 
   return (
@@ -93,49 +95,41 @@ export function EditProfile() {
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid gap-6 sm:grid-cols-2">
-              {fields.map(({ name, label, icon: Icon, required, type, step, placeholder }) => (
-                <div key={name} className={name === "address" ? "sm:col-span-2" : ""}>
-                  <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Icon className="size-4 text-gray-400" />
-                    {label}
-                  </label>
-                  {name === "address" ? (
-                    <textarea
-                      name={name}
-                      value={initialForm[name]}
-                      onChange={handleChange}
-                      rows={3}
-                      required={required}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                    />
-                  ) : (
-                    <input
-                      type={type}
-                      name={name}
-                      value={initialForm[name]}
-                      onChange={handleChange}
-                      step={step}
-                      placeholder={placeholder}
-                      required={required}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                    />
-                  )}
-                </div>
-              ))}
-
-              <div className="sm:col-span-2">
-                <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-gray-700">
-                  <Mail className="size-4 text-gray-400" />
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={bank?.email || ""}
-                  disabled
-                  className="w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
-                />
-                <p className="mt-1 text-xs text-gray-400">Email cannot be changed</p>
-              </div>
+              {fields.map(({ name, label, icon: Icon, required, type, step, placeholder, maxLength, disabled, colSpan }) => {
+                const value = name === "email" ? bank?.user?.email || "" : initialForm[name];
+                return (
+                  <div key={name} className={colSpan ? "sm:col-span-2" : ""}>
+                    <label className="mb-1.5 flex items-center gap-2 text-sm font-medium text-gray-700">
+                      <Icon className="size-4 text-gray-400" />
+                      {label}
+                    </label>
+                    {type === "textarea" ? (
+                      <textarea
+                        name={name}
+                        value={value}
+                        onChange={handleChange}
+                        rows={3}
+                        required={required}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                      />
+                    ) : (
+                      <input
+                        type={type}
+                        name={name}
+                        value={value}
+                        onChange={handleChange}
+                        step={step}
+                        placeholder={placeholder}
+                        maxLength={maxLength}
+                        required={required}
+                        disabled={disabled}
+                        className={`w-full rounded-lg border px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 ${disabled ? "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-500" : "border-gray-300"}`}
+                      />
+                    )}
+                    {name === "email" && <p className="mt-1 text-xs text-gray-400">Email cannot be changed</p>}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="flex gap-3 border-t pt-4">
@@ -165,22 +159,3 @@ export function EditProfile() {
   );
 }
 
-function Mail(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="20" height="16" x="2" y="4" rx="2" />
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
-  );
-}

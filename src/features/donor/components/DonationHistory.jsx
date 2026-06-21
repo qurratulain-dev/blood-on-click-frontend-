@@ -14,7 +14,8 @@ import { toast } from "sonner";
 
 export function DonationHistory() {
   const queryClient = useQueryClient();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
@@ -116,8 +117,8 @@ export function DonationHistory() {
   const totalUnits = donations?.filter((d) => d.status === "completed").reduce((sum, d) => sum + d.quantity, 0) || 0;
 
   const filtered = (donations || []).filter((d) => {
-    if (!searchTerm) return true;
-    const term = searchTerm.toLowerCase();
+    if (!searchQuery) return true;
+    const term = searchQuery.toLowerCase();
     return (
       d.bank_name?.toLowerCase().includes(term) ||
       d.blood_group?.toLowerCase().includes(term) ||
@@ -169,11 +170,26 @@ export function DonationHistory() {
           <input
             type="text"
             placeholder="Search by bank, blood group, status..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") setSearchQuery(searchInput); }}
             className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
           />
         </div>
+        <button
+          onClick={() => setSearchQuery(searchInput)}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+        >
+          Search
+        </button>
+        {searchQuery && (
+          <button
+            onClick={() => { setSearchInput(""); setSearchQuery(""); }}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+          >
+            Clear
+          </button>
+        )}
         <button
           onClick={() => {
             queryClient.invalidateQueries({ queryKey: ["donor-donations"] });
@@ -207,6 +223,7 @@ export function DonationHistory() {
                     <th className="pb-2 font-medium">Group</th>
                     <th className="pb-2 font-medium">Units</th>
                     <th className="pb-2 font-medium">Status</th>
+                    <th className="pb-2 font-medium">Admin Message</th>
                     <th className="pb-2 font-medium">Medical Report</th>
                     <th className="pb-2 font-medium text-right">Action</th>
                   </tr>
@@ -228,6 +245,13 @@ export function DonationHistory() {
                       <td className="py-2.5 font-medium">{d.quantity}</td>
                       <td className="py-2.5">
                         <StatusBadge status={d.status} />
+                      </td>
+                      <td className="py-2.5 max-w-[200px]">
+                        {d.admin_message ? (
+                          <span className="text-xs text-gray-600">{d.admin_message}</span>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
                       </td>
                       <td className="py-2.5">
                         {d.medical_report_url ? (

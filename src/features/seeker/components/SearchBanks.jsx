@@ -3,12 +3,14 @@ import { searchBanks, createRequest } from "@/features/seeker/api/seeker";
 import { GROUP_COLORS, BLOOD_GROUPS } from "@/config/constants";
 import { Loader2, Search, MapPin, Phone, Mail, Droplet, IdCard, Navigation, AlertTriangle, X, User, Building2, Clock } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export function SearchBanks() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
+  const [bloodGroupQuery, setBloodGroupQuery] = useState("");
   const [showRequestModal, setShowRequestModal] = useState(null);
   const [requestForm, setRequestForm] = useState({
     blood_group: "",
@@ -21,15 +23,28 @@ export function SearchBanks() {
   });
 
   const { data: banks, isLoading } = useQuery({
-    queryKey: ["seeker-banks", search, bloodGroup],
-    queryFn: async () => {
+    queryKey: ["seeker-banks", searchQuery, bloodGroupQuery],
+    queryFn: async ({ queryKey }) => {
+      const [, sq, bg] = queryKey;
       const params = {};
-      if (search) params.name = search;
-      if (bloodGroup) params.blood_group = bloodGroup;
+      if (sq) params.name = sq;
+      if (bg) params.blood_group = bg;
       const res = await searchBanks(params);
       return res.data;
     },
   });
+
+  const handleSearch = () => {
+    setSearchQuery(search.trim());
+    setBloodGroupQuery(bloodGroup);
+  };
+
+  const handleClear = () => {
+    setSearch("");
+    setSearchQuery("");
+    setBloodGroup("");
+    setBloodGroupQuery("");
+  };
 
   const requestMutation = useMutation({
     mutationFn: (data) => createRequest(data),
@@ -102,127 +117,137 @@ export function SearchBanks() {
             Find Blood Banks
           </h5>
         </div>
-        <div className="grid gap-4 sm:grid-cols-4">
-          <div>
-            <label className="mb-1 block text-xs font-medium text-gray-600">Blood Group Needed</label>
-            <select
-              value={bloodGroup}
-              onChange={(e) => setBloodGroup(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
-            >
-              <option value="">Any Blood Group</option>
-              {BLOOD_GROUPS.map((bg) => (
-                <option key={bg} value={bg}>{bg}</option>
-              ))}
-            </select>
-          </div>
-          <div className="sm:col-span-2">
-            <label className="mb-1 block text-xs font-medium text-gray-600">Bank Name or Location</label>
+        <div className="flex flex-wrap gap-3">
+          <select
+            value={bloodGroup}
+            onChange={(e) => {
+              setBloodGroup(e.target.value);
+              if (e.target.value) setBloodGroupQuery(e.target.value);
+            }}
+            className="w-48 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
+          >
+            <option value="">Any Blood Group</option>
+            {BLOOD_GROUPS.map((bg) => (
+              <option key={bg} value={bg}>{bg}</option>
+            ))}
+          </select>
+          <div className="relative min-w-0 flex-1">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search by name or location..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
             />
           </div>
-          <div className="flex items-end">
+          <button
+            onClick={handleSearch}
+            className="flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            <Search className="size-4" />
+            Search
+          </button>
+          {(searchQuery || bloodGroupQuery) && (
             <button
-              onClick={() => queryClient.invalidateQueries({ queryKey: ["seeker-banks"] })}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              onClick={handleClear}
+              className="flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
-              <Search className="size-4" />
-              Search Banks
+              <X className="size-4" />
+              Clear
             </button>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Results */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="size-8 animate-spin text-red-600" />
-        </div>
-      ) : banks?.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {banks.map((bank) => {
-            const available = getAvailableStock(bank);
-            return (
-              <div key={bank.id} className="flex flex-col rounded-xl border bg-white shadow-sm">
-                <div className="border-b bg-red-600 px-5 py-3 text-white">
-                  <h5 className="font-semibold">{bank.bank_name}</h5>
-                </div>
-                <div className="flex-1 space-y-2 p-5 text-sm">
-                  <p className="flex items-start gap-2">
-                    <MapPin className="mt-0.5 size-4 shrink-0 text-gray-400" />
-                    <span>{bank.address}</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <Phone className="size-4 text-gray-400" />
-                    <span>{bank.phone || "—"}</span>
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <Mail className="size-4 text-gray-400" />
-                    <span>{bank.email || "—"}</span>
-                  </p>
+      {(bloodGroupQuery || searchQuery) && (
+        isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="size-8 animate-spin text-red-600" />
+          </div>
+        ) : banks?.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {banks.map((bank) => {
+              const available = getAvailableStock(bank);
+              return (
+                <div key={bank.id} className="flex flex-col rounded-xl border bg-white shadow-sm">
+                  <div className="border-b bg-red-600 px-5 py-3 text-white">
+                    <h5 className="font-semibold">{bank.bank_name}</h5>
+                  </div>
+                  <div className="flex-1 space-y-2 p-5 text-sm">
+                    <p className="flex items-start gap-2">
+                      <MapPin className="mt-0.5 size-4 shrink-0 text-gray-400" />
+                      <span>{bank.address}</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Phone className="size-4 text-gray-400" />
+                      <span>{bank.phone || "—"}</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Mail className="size-4 text-gray-400" />
+                      <span>{bank.email || "—"}</span>
+                    </p>
 
-                  {bloodGroup && available !== null && (
-                    <div className={`rounded-lg p-3 text-xs font-medium ${
-                      available > 0
-                        ? "bg-green-50 text-green-800 border border-green-200"
-                        : "bg-red-50 text-red-800 border border-red-200"
-                    }`}>
-                      <div className="flex items-center gap-2">
-                        <Droplet className="size-4" />
-                        <strong>Blood Group {bloodGroup}:</strong>
-                        {available > 0 ? (
-                          <span><AlertTriangle className="inline size-3" /> Available ({available} units)</span>
-                        ) : (
-                          <span><X className="inline size-3" /> Out of Stock</span>
-                        )}
+                    {bloodGroupQuery && available !== null && (
+                      <div className={`rounded-lg p-3 text-xs font-medium ${
+                        available > 0
+                          ? "bg-green-50 text-green-800 border border-green-200"
+                          : "bg-red-50 text-red-800 border border-red-200"
+                      }`}>
+                        <div className="flex items-center gap-2">
+                          <Droplet className="size-4" />
+                          <strong>Blood Group {bloodGroupQuery}:</strong>
+                          {available > 0 ? (
+                            <span><AlertTriangle className="inline size-3" /> Available ({available} units)</span>
+                          ) : (
+                            <span><X className="inline size-3" /> Out of Stock</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  <p className="flex items-center gap-2">
-                    <IdCard className="size-4 text-gray-400" />
-                    <span>Reg No: {bank.registration_number || "—"}</span>
-                  </p>
+                    <p className="flex items-center gap-2">
+                      <IdCard className="size-4 text-gray-400" />
+                      <span>Reg No: {bank.registration_number || "—"}</span>
+                    </p>
+                  </div>
+                  <div className="flex gap-2 border-t p-4">
+                    <button
+                      onClick={() => getDirections(bank.latitude, bank.longitude)}
+                      disabled={!bank.latitude || !bank.longitude}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-green-600 px-3 py-2 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                    >
+                      <Navigation className="size-3" />
+                      Get Directions
+                    </button>
+                    <button
+                      onClick={() => contactBank(bank.phone)}
+                      disabled={!bank.phone}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      <Phone className="size-3" />
+                      Contact
+                    </button>
+                    <button
+                      onClick={() => openRequestModal(bank)}
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white hover:bg-red-700"
+                    >
+                      <Droplet className="size-3" />
+                      Request Blood
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-2 border-t p-4">
-                  <button
-                    onClick={() => getDirections(bank.latitude, bank.longitude)}
-                    disabled={!bank.latitude || !bank.longitude}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-green-600 px-3 py-2 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
-                  >
-                    <Navigation className="size-3" />
-                    Get Directions
-                  </button>
-                  <button
-                    onClick={() => contactBank(bank.phone)}
-                    disabled={!bank.phone}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    <Phone className="size-3" />
-                    Contact
-                  </button>
-                  <button
-                    onClick={() => openRequestModal(bank)}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white hover:bg-red-700"
-                  >
-                    <Droplet className="size-3" />
-                    Request Blood
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center gap-3 py-20 text-center">
-          <Building2 className="size-12 text-gray-300" />
-          <p className="text-sm text-muted-foreground">No blood banks found matching your criteria.</p>
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-3 py-20 text-center">
+            <Building2 className="size-12 text-gray-300" />
+            <p className="text-sm text-muted-foreground">No blood banks found matching your criteria.</p>
+          </div>
+        )
       )}
 
       {/* Request Blood Modal */}

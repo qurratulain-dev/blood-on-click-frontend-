@@ -7,12 +7,13 @@ import {
   AlertTriangle, Phone, User, Droplet, Syringe, Clock,
 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 export function ViewRequests() {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: requests, isLoading } = useQuery({
     queryKey: ["blood-bank-requests"],
@@ -67,12 +68,12 @@ export function ViewRequests() {
 
   const filtered = (requests || []).filter((r) => {
     const matchesFilter = filter === "all" || r.status === filter;
-    const matchesSearch = !search ||
-      r.seeker_name?.toLowerCase().includes(search.toLowerCase()) ||
-      r.seeker_phone?.includes(search) ||
-      r.blood_group?.toLowerCase().includes(search.toLowerCase()) ||
-      r.patient_name?.toLowerCase().includes(search.toLowerCase()) ||
-      r.hospital_name?.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = !searchQuery ||
+      r.seeker_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.seeker_phone?.includes(searchQuery) ||
+      r.blood_group?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.patient_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.hospital_name?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -109,11 +110,26 @@ export function ViewRequests() {
           <input
             type="text"
             placeholder="Search by name, phone, blood group, hospital..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") setSearchQuery(searchInput); }}
             className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500"
           />
         </div>
+        <button
+          onClick={() => setSearchQuery(searchInput)}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+        >
+          Search
+        </button>
+        {searchQuery && (
+          <button
+            onClick={() => { setSearchInput(""); setSearchQuery(""); }}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+          >
+            Clear
+          </button>
+        )}
         <button
           onClick={() => queryClient.invalidateQueries({ queryKey: ["blood-bank-requests"] })}
           className="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"

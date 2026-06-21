@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/features/auth/schemas/login";
@@ -28,11 +28,18 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: { role_type: selectedRole },
   });
+
+  useEffect(() => {
+    if (selectedRole) {
+      setValue("role_type", selectedRole);
+    }
+  }, [selectedRole, setValue]);
 
   const onSubmit = (data) => mutate(data);
 

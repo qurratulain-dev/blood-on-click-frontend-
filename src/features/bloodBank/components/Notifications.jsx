@@ -3,7 +3,7 @@ import { getNotifications, markNotificationRead } from "@/features/bloodBank/api
 import { Bell, CheckCheck, Loader2, Clock } from "lucide-react";
 import { toast } from "sonner";
 
-export function Notifications() {
+export function BankNotifications() {
   const queryClient = useQueryClient();
 
   const { data: notifications, isLoading } = useQuery({

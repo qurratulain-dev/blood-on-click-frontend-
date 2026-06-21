@@ -1,17 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "@/features/auth/api/register";
-import { useAuthStore } from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export function useRegister() {
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: registerUser,
-    onSuccess: (response) => {
-      const { user, role, token } = response.data;
-      setAuth(user, token, role);
-      toast.success("Registration successful!");
+    onSuccess: () => {
+      toast.success("Registration successful! Please login.");
+      navigate("/login");
     },
     onError: (error) => {
       const message =
