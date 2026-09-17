@@ -6,6 +6,7 @@ import { DonorLayout } from "@/components/layout/DonorLayout";
 import { SeekerLayout } from "@/components/layout/SeekerLayout";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { HomePage } from "@/features/landing/components/HomePage";
+import { EmergencyPage } from "@/features/emergency/components/EmergencyPage";
 import { RegisterPage } from "@/features/auth/components/registration/RegisterPage";
 import { LoginPage } from "@/features/auth/components/login/LoginPage";
 import { AdminDashboard } from "@/features/admin/components/AdminDashboard";
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "/", element: <HomePage /> },
+      { path: "/emergency", element: <EmergencyPage /> },
       { path: "/register", element: <RegisterPage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "*", element: <NotFoundPage /> },

@@ -1,8 +1,12 @@
 {
   "topbar": [
     { "key": "home", "label": "Home", "route": "/", "icon": "Home", "roles": ["*"] },
-    { "key": "register", "label": "Register", "route": "/register", "icon": "UserPlus", "roles": ["guest"] },
-    { "key": "login", "label": "Login", "route": "/login", "icon": "LogIn", "roles": ["guest"] }
+    { "key": "emergency", "label": "Emergency", "route": "/emergency", "icon": "Siren", "roles": ["*"] },
+    { "key": "about", "label": "About Us", "route": "/about", "icon": "Info", "roles": ["*"] },
+    { "key": "contact", "label": "Contact Us", "route": "/contact", "icon": "Mail", "roles": ["*"] },
+    { "key": "faqs", "label": "FAQs", "route": "/faqs", "icon": "HelpCircle", "roles": ["*"] },
+    { "key": "login", "label": "Login", "route": "/login", "icon": "LogIn", "roles": ["guest"] },
+    { "key": "register", "label": "Register", "route": "/register", "icon": "UserPlus", "roles": ["guest"] }
   ],
   "sidebar": {
     "Admin": [
