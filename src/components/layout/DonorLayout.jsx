@@ -59,9 +59,9 @@ className={({ isActive }) =>
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <header className="flex items-center justify-between border-b bg-white px-6 py-3 shadow-sm shrink-0">
-          <h1 className="text-lg font-semibold text-gray-800">
+          <p className="text-lg font-semibold text-gray-800">
             Welcome, {user?.name || "Donor"}
-          </h1>
+          </p>
           <div className="flex items-center gap-3">
             <button
               onClick={logout}

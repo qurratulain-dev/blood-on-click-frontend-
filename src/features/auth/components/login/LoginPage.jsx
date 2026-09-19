@@ -42,7 +42,7 @@ function RoleSelect({ onSelect }) {
           key={id}
           type="button"
           onClick={() => onSelect(id)}
-          className="group flex min-h-[72px] items-center gap-3 rounded-2xl border border-border bg-white p-3.5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-red-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40"
+          className="group flex min-h-18 items-center gap-3 rounded-2xl border border-border bg-white p-3.5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-red-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40"
         >
           <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-600 transition-colors group-hover:bg-red-100">
             <Icon className="size-5" aria-hidden="true" />
@@ -89,7 +89,7 @@ export function LoginPage() {
       aria-labelledby="login-heading"
       className="relative px-4 py-8 sm:px-6 lg:py-12"
     >
-      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-border/70 bg-white shadow-[0_28px_70px_-40px_rgba(190,18,60,0.4)] lg:min-h-[600px] lg:grid-cols-[45fr_55fr]">
+      <div className="mx-auto grid max-w-5xl overflow-hidden rounded-3xl border border-border/70 bg-white shadow-[0_28px_70px_-40px_rgba(190,18,60,0.4)] lg:min-h-150 lg:grid-cols-[45fr_55fr]">
         <LoginBrandPanel />
 
         <div className="flex items-center justify-center px-6 py-10 sm:px-10 lg:py-12">
