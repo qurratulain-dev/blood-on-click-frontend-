@@ -6,7 +6,7 @@ import {
   Droplet, Loader2, MapPin, Search, User,
 } from "lucide-react";
 import { BLOOD_GROUPS, GROUP_COLORS, ROLES } from "@/config/constants";
-import { searchBanks, searchDonors } from "@/features/seeker/api/seeker";
+import { searchBanks, searchDonors } from "@/features/user/api/User";
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -148,7 +148,7 @@ export function EmergencyBloodSearch() {
   const [validationError, setValidationError] = useState(false);
   const [submitted, setSubmitted] = useState(null);
 
-  const isSeeker = isAuthenticated && role === ROLES.SEEKER;
+  const isUser = isAuthenticated && role === ROLES.USER;
 
   const results = useQueries({
     queries: [
@@ -196,17 +196,17 @@ export function EmergencyBloodSearch() {
     }
     setValidationError(false);
 
-    if (isSeeker) {
+    if (isUser) {
       setSubmitted({ bloodGroup, location: location.trim() });
       return;
     }
 
     if (isAuthenticated) {
-      toast("Searching for blood is available on Seeker accounts.");
+      toast("Searching for blood is available on User accounts.");
       return;
     }
 
-    toast("Sign in as a Seeker to search for blood.");
+    toast("Sign in as a User to search for blood.");
     navigate("/login");
   };
 
@@ -304,9 +304,9 @@ export function EmergencyBloodSearch() {
                   Find Compatible Blood
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
-                  {isSeeker
+                  {isUser
                     ? "Results appear below after you search."
-                    : "Sign in as a Seeker to see available options."}
+                    : "Sign in as a User to see available options."}
                 </p>
               </div>
             </form>
@@ -408,14 +408,14 @@ export function EmergencyBloodSearch() {
 
                     <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
                       <Link
-                        to="/seeker/search-donors"
+                        to="/user/search-donors"
                         className="inline-flex items-center gap-1 font-medium text-red-700 transition-colors hover:text-red-800"
                       >
                         All donors
                         <ChevronRight className="size-4" />
                       </Link>
                       <Link
-                        to="/seeker/search-banks"
+                        to="/user/search-banks"
                         className="inline-flex items-center gap-1 font-medium text-red-700 transition-colors hover:text-red-800"
                       >
                         All banks

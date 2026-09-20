@@ -4,8 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2, UserPlus } from "lucide-react";
 import {
   bloodBankSchema,
-  donorSchema,
-  seekerSchema,
+  userSchema,
 } from "@/features/auth/schemas/register";
 import { BLOOD_GROUPS, GENDERS } from "@/config/constants";
 import { Button } from "@/components/ui/button";
@@ -14,9 +13,8 @@ import { cn } from "@/lib/utils";
 import { REGISTER_ROLES } from "./registerRoles";
 
 const schemas = {
-  donor: donorSchema,
+  user: userSchema,
   blood_bank: bloodBankSchema,
-  seeker: seekerSchema,
 };
 
 const inputClass =
@@ -165,26 +163,26 @@ function FormGroup({ title, children }) {
   );
 }
 
-function DonorFields({ register, errors }) {
+function UserFields({ register, errors }) {
   return (
     <>
       <FormGroup title="Account details">
         <TextField
-          id="donor-name"
+          id="user-name"
           label="Full Name"
           autoComplete="name"
           registration={register("name")}
           error={errors.name?.message}
         />
         <TextField
-          id="donor-username"
+          id="user-username"
           label="Username"
           autoComplete="username"
           registration={register("username")}
           error={errors.username?.message}
         />
         <TextField
-          id="donor-email"
+          id="user-email"
           label="Email Address"
           type="email"
           placeholder="you@example.com"
@@ -193,14 +191,14 @@ function DonorFields({ register, errors }) {
           error={errors.email?.message}
         />
         <PasswordField
-          id="donor-password"
+          id="user-password"
           label="Password"
           autoComplete="new-password"
           registration={register("password")}
           error={errors.password?.message}
         />
         <PasswordField
-          id="donor-password-confirmation"
+          id="user-password-confirmation"
           label="Confirm Password"
           autoComplete="new-password"
           registration={register("password_confirmation")}
@@ -210,7 +208,7 @@ function DonorFields({ register, errors }) {
 
       <FormGroup title="Profile details">
         <SelectField
-          id="donor-blood-group"
+          id="user-blood-group"
           label="Blood Group"
           placeholder="Select Blood Group"
           options={BLOOD_GROUPS}
@@ -219,14 +217,14 @@ function DonorFields({ register, errors }) {
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <SelectField
-            id="donor-gender"
+            id="user-gender"
             label="Gender"
             options={GENDERS}
             registration={register("gender")}
             error={errors.gender?.message}
           />
           <TextField
-            id="donor-age"
+            id="user-age"
             label="Age"
             type="number"
             registration={register("age")}
@@ -234,7 +232,7 @@ function DonorFields({ register, errors }) {
           />
         </div>
         <TextField
-          id="donor-weight"
+          id="user-weight"
           label="Weight (kg)"
           type="number"
           step="0.01"
@@ -245,14 +243,14 @@ function DonorFields({ register, errors }) {
 
       <FormGroup title="Contact details">
         <TextField
-          id="donor-phone"
+          id="user-phone"
           label="Phone"
           autoComplete="tel"
           registration={register("phone")}
           error={errors.phone?.message}
         />
         <TextareaField
-          id="donor-address"
+          id="user-address"
           label="Address"
           rows={3}
           registration={register("address")}
@@ -341,73 +339,9 @@ function BloodBankFields({ register, errors }) {
   );
 }
 
-function SeekerFields({ register, errors }) {
-  return (
-    <>
-      <FormGroup title="Account details">
-        <TextField
-          id="seeker-name"
-          label="Full Name"
-          autoComplete="name"
-          registration={register("name")}
-          error={errors.name?.message}
-        />
-        <TextField
-          id="seeker-username"
-          label="Username"
-          autoComplete="username"
-          registration={register("username")}
-          error={errors.username?.message}
-        />
-        <TextField
-          id="seeker-email"
-          label="Email Address"
-          type="email"
-          placeholder="you@example.com"
-          autoComplete="email"
-          registration={register("email")}
-          error={errors.email?.message}
-        />
-        <PasswordField
-          id="seeker-password"
-          label="Password"
-          autoComplete="new-password"
-          registration={register("password")}
-          error={errors.password?.message}
-        />
-        <PasswordField
-          id="seeker-password-confirmation"
-          label="Confirm Password"
-          autoComplete="new-password"
-          registration={register("password_confirmation")}
-          error={errors.password_confirmation?.message}
-        />
-      </FormGroup>
-
-      <FormGroup title="Contact details">
-        <TextField
-          id="seeker-phone"
-          label="Phone"
-          autoComplete="tel"
-          registration={register("phone")}
-          error={errors.phone?.message}
-        />
-        <TextareaField
-          id="seeker-address"
-          label="Address"
-          rows={2}
-          registration={register("address")}
-          error={errors.address?.message}
-        />
-      </FormGroup>
-    </>
-  );
-}
-
 const roleForms = {
-  donor: DonorFields,
+  user: UserFields,
   blood_bank: BloodBankFields,
-  seeker: SeekerFields,
 };
 
 export function RegisterForm({ selectedRole, onSubmit, isPending }) {

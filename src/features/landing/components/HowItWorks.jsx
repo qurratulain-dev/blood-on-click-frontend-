@@ -55,14 +55,14 @@ const ROLE_PATHS = [
     icon: Droplet,
     title: "I Need Blood",
     description: "Search available donors and blood banks for the blood group you need.",
-    to: "/seeker/search-donors",
+    to: "/user/search-donors",
     linkLabel: "Search donors",
   },
   {
     icon: HandHeart,
     title: "I Want to Donate",
     description: "Register as a donor, stay discoverable, and donate at a blood bank.",
-    to: "/donor/search-banks",
+    to: "/user/search-banks",
     linkLabel: "Find a blood bank",
   },
   {

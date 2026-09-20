@@ -4,23 +4,22 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getCounts } from "@/features/admin/api/admin";
 import { useAddUser } from "@/features/admin/hooks/useAddUser";
-import { donorSchema, bloodBankSchema, seekerSchema } from "@/features/admin/schemas/admin";
+import { userSchema, bloodBankSchema } from "@/features/admin/schemas/admin";
 import { BLOOD_GROUPS } from "@/config/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Users, Building2, Search, User, Shield, Info } from "lucide-react";
+import { Loader2, Users, Building2, User, Info } from "lucide-react";
 
 const tabs = [
-  { key: "donor", icon: User, label: "Add Donor" },
+  { key: "user", icon: User, label: "Add User" },
   { key: "blood_bank", icon: Building2, label: "Add Blood Bank" },
-  { key: "seeker", icon: Search, label: "Add Seeker" },
 ];
 
-const schemas = { donor: donorSchema, blood_bank: bloodBankSchema, seeker: seekerSchema };
+const schemas = { user: userSchema, blood_bank: bloodBankSchema };
 
-const defaultPasswords = { donor: "donor123", blood_bank: "bank123", seeker: "seeker123" };
+const defaultPasswords = { user: "user1234", blood_bank: "bank1234" };
 
-function DonorForm({ register: reg, errors }) {
+function UserForm({ register: reg, errors }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <div>
@@ -36,7 +35,7 @@ function DonorForm({ register: reg, errors }) {
       <div>
         <label className="mb-1 block text-sm font-medium">Password <span className="text-red-500">*</span></label>
         <Input {...reg("password")} />
-        <p className="mt-0.5 text-xs text-muted-foreground">Default: donor123</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">Default: user1234</p>
         {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
       </div>
       <div>
@@ -112,7 +111,7 @@ function BloodBankForm({ register: reg, errors }) {
       <div>
         <label className="mb-1 block text-sm font-medium">Password <span className="text-red-500">*</span></label>
         <Input {...reg("password")} />
-        <p className="mt-0.5 text-xs text-muted-foreground">Default: bank123</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">Default: bank1234</p>
         {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
       </div>
       <div>
@@ -153,51 +152,10 @@ function BloodBankForm({ register: reg, errors }) {
   );
 }
 
-function SeekerForm({ register: reg, errors }) {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <div>
-        <label className="mb-1 block text-sm font-medium">Full Name <span className="text-red-500">*</span></label>
-        <Input {...reg("full_name")} />
-        {errors.full_name && <p className="mt-1 text-xs text-red-500">{errors.full_name.message}</p>}
-      </div>
-      <div>
-        <label className="mb-1 block text-sm font-medium">Email <span className="text-red-500">*</span></label>
-        <Input type="email" {...reg("email")} />
-        {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
-      </div>
-      <div>
-        <label className="mb-1 block text-sm font-medium">Password <span className="text-red-500">*</span></label>
-        <Input {...reg("password")} />
-        <p className="mt-0.5 text-xs text-muted-foreground">Default: seeker123</p>
-        {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
-      </div>
-      <div>
-        <label className="mb-1 block text-sm font-medium">Phone <span className="text-red-500">*</span></label>
-        <Input {...reg("phone")} />
-        {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p>}
-      </div>
-      <div>
-        <label className="mb-1 block text-sm font-medium">Latitude</label>
-        <Input placeholder="31.5497" {...reg("latitude")} />
-      </div>
-      <div>
-        <label className="mb-1 block text-sm font-medium">Longitude</label>
-        <Input placeholder="74.3436" {...reg("longitude")} />
-      </div>
-      <div className="sm:col-span-2">
-        <label className="mb-1 block text-sm font-medium">Address <span className="text-red-500">*</span></label>
-        <textarea rows={2} {...reg("address")} className="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none focus-visible:border-ring focus-visible:ring-3 md:text-sm" />
-        {errors.address && <p className="mt-1 text-xs text-red-500">{errors.address.message}</p>}
-      </div>
-    </div>
-  );
-}
-
-const formComponents = { donor: DonorForm, blood_bank: BloodBankForm, seeker: SeekerForm };
+const formComponents = { user: UserForm, blood_bank: BloodBankForm };
 
 export function AddUser() {
-  const [activeTab, setActiveTab] = useState("donor");
+  const [activeTab, setActiveTab] = useState("user");
   const { mutate, isPending } = useAddUser();
 
   const { data: counts } = useQuery({
@@ -221,7 +179,7 @@ export function AddUser() {
     defaultValues: {
       role: activeTab,
       password: defaultPasswords[activeTab],
-      status: activeTab === "donor" ? "available" : "active",
+      status: activeTab === "user" ? "available" : "active",
     },
   });
 
@@ -230,9 +188,8 @@ export function AddUser() {
   };
 
   const statsCards = [
-    { icon: Users, label: "Total Donors", value: counts?.donors },
+    { icon: Users, label: "Total Users", value: counts?.users },
     { icon: Building2, label: "Total Blood Banks", value: counts?.blood_banks },
-    { icon: Shield, label: "Total Seekers", value: counts?.seekers },
   ];
 
   return (
@@ -240,8 +197,7 @@ export function AddUser() {
       <h2 className="mb-1 text-2xl font-bold">Add New User</h2>
       <hr className="mb-6" />
 
-      {/* Stats Cards - same style as old PHP */}
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2">
         {statsCards.map(({ icon: Icon, label, value }) => (
           <div key={label} className="rounded-xl border bg-white p-6 text-center shadow-sm">
             <Icon className="mx-auto size-8 text-red-600" />
@@ -251,7 +207,6 @@ export function AddUser() {
         ))}
       </div>
 
-      {/* Tabs - matching old PHP tab style */}
       <div className="mb-4 flex gap-1 rounded-lg bg-gray-200 p-1">
         {tabs.map(({ key, icon: Icon, label }) => (
           <button
@@ -262,7 +217,7 @@ export function AddUser() {
               reset({
                 role: key,
                 password: defaultPasswords[key],
-                status: key === "donor" ? "available" : "active",
+                status: key === "user" ? "available" : "active",
               });
             }}
             className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition ${
@@ -275,12 +230,11 @@ export function AddUser() {
         ))}
       </div>
 
-      {/* Form Card */}
       <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
         <div className="bg-red-600 px-6 py-3 text-white">
           <h5 className="flex items-center gap-2 font-semibold">
             <Users className="size-4" />
-            Add New {activeTab === "donor" ? "Donor" : activeTab === "blood_bank" ? "Blood Bank" : "Seeker"}
+            Add New {activeTab === "user" ? "User" : "Blood Bank"}
           </h5>
         </div>
         <div className="p-6">
@@ -296,7 +250,7 @@ export function AddUser() {
                 reset({
                   role: activeTab,
                   password: defaultPasswords[activeTab],
-                  status: activeTab === "donor" ? "available" : "active",
+                  status: activeTab === "user" ? "available" : "active",
                 });
               }}>Reset</Button>
             </div>
@@ -304,7 +258,6 @@ export function AddUser() {
         </div>
       </div>
 
-      {/* Quick Tips - matches old PHP exactly */}
       <div className="mt-6 rounded-lg bg-blue-50 p-4 text-sm text-blue-800">
         <div className="flex items-start gap-2">
           <Info className="mt-0.5 size-4 shrink-0" />

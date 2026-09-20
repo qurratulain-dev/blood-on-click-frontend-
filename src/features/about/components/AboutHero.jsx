@@ -44,7 +44,7 @@ export function AboutHero() {
               size="lg"
               className="group h-11 w-full gap-2 bg-red-600 px-6 text-base text-white shadow-sm shadow-red-600/30 hover:bg-red-700 sm:w-auto"
             >
-              <Link to="/seeker/search-donors">
+              <Link to="/user/search-donors">
                 Find Blood
                 <Search
                   className="size-4 transition-transform group-hover:scale-110"
@@ -58,7 +58,7 @@ export function AboutHero() {
               variant="outline"
               className="h-11 w-full gap-2 border-red-300 px-6 text-base text-red-700 hover:border-red-400 hover:bg-red-50 hover:text-red-800 sm:w-auto"
             >
-              <Link to="/register?role=donor">
+              <Link to="/register?role=user">
                 <HeartHandshake className="size-4" aria-hidden="true" />
                 Become a Donor
               </Link>

@@ -1,22 +1,13 @@
-import { Building2, HeartHandshake, UserRound } from "lucide-react";
+import { Building2, HeartHandshake } from "lucide-react";
 
 export const REGISTER_ROLES = [
   {
-    id: "donor",
+    id: "user",
     icon: HeartHandshake,
-    label: "Donor",
-    description: "Donate blood and manage your donor profile.",
-    heading: "Donor details",
-    formDescription: "Tell us a little about your donor profile.",
-    wide: false,
-  },
-  {
-    id: "seeker",
-    icon: UserRound,
-    label: "Seeker",
-    description: "Search for donors and blood banks.",
+    label: "User",
+    description: "Donate blood and make blood requests.",
     heading: "Your details",
-    formDescription: "Share your details to create your seeker account.",
+    formDescription: "Tell us about yourself and your blood profile.",
     wide: false,
   },
   {

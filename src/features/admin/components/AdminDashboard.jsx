@@ -2,12 +2,12 @@ import { useAdminDashboard } from "@/features/admin/hooks/useAdminDashboard";
 import { BLOOD_GROUPS, GROUP_COLORS } from "@/config/constants";
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { Users, Building2, Heart, Droplet, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { Users, Building2, Droplet, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 
 function DonationRow({ d }) {
   return (
     <tr className="border-b text-sm last:border-0 hover:bg-gray-50">
-      <td className="py-2.5 pl-4">{d.donor_name}</td>
+      <td className="py-2.5 pl-4">{d.user_name}</td>
       <td className="py-2.5">
         <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GROUP_COLORS[d.blood_group] || "bg-gray-100 text-gray-800"}`}>
           {d.blood_group}
@@ -35,9 +35,8 @@ export function AdminDashboard() {
   }
 
   const stats = [
-    { icon: Users, label: "Total Donors", value: data?.donors },
+    { icon: Users, label: "Total Users", value: data?.users },
     { icon: Building2, label: "Blood Banks", value: data?.blood_banks },
-    { icon: Heart, label: "Total Seekers", value: data?.seekers },
     { icon: Droplet, label: "Total Requests", value: data?.total_requests },
     { icon: AlertCircle, label: "Pending Requests", value: data?.pending_requests, sub: "Awaiting action" },
   ];
@@ -58,7 +57,7 @@ export function AdminDashboard() {
       <h2 className="mb-1 text-2xl font-bold">Admin Dashboard</h2>
       <hr className="mb-6" />
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => <DashboardStatCard key={s.label} {...s} />)}
       </div>
 

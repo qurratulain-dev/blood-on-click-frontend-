@@ -218,7 +218,7 @@ export function DonorImpact() {
                 size="lg"
                 className="h-11 w-full gap-2 bg-red-600 px-6 text-base text-white shadow-sm shadow-red-600/30 hover:bg-red-700 sm:w-auto"
               >
-                <Link to="/register?role=donor">
+                <Link to="/register?role=user">
                   Become a Donor
                 </Link>
               </Button>

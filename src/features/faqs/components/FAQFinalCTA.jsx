@@ -64,7 +64,7 @@ export function FAQFinalCTA() {
                 variant="outline"
                 className="h-11 w-full gap-2 border-red-300 bg-white/60 px-6 text-base text-red-700 hover:border-red-400 hover:bg-red-50 hover:text-red-800 sm:w-auto"
               >
-                <Link to="/seeker/search-donors">
+                <Link to="/user/search-donors">
                   <Search className="size-4" aria-hidden="true" />
                   Find Blood
                 </Link>

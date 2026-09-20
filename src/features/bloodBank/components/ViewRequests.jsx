@@ -69,8 +69,8 @@ export function ViewRequests() {
   const filtered = (requests || []).filter((r) => {
     const matchesFilter = filter === "all" || r.status === filter;
     const matchesSearch = !searchQuery ||
-      r.seeker_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.seeker_phone?.includes(searchQuery) ||
+      r.user_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.user_phone?.includes(searchQuery) ||
       r.blood_group?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.patient_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.hospital_name?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -195,13 +195,13 @@ export function ViewRequests() {
                       <td className="py-2.5">
                         <div className="flex items-center gap-2">
                           <User className="size-4 text-gray-400" />
-                          <span className="font-medium">{r.seeker_name}</span>
+                          <span className="font-medium">{r.user_name}</span>
                         </div>
                       </td>
                       <td className="py-2.5">
                         <div className="flex items-center gap-1 text-gray-500">
                           <Phone className="size-3" />
-                          {r.seeker_phone}
+                          {r.user_phone}
                         </div>
                       </td>
                       <td className="py-2.5">

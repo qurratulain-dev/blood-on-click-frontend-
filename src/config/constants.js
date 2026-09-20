@@ -1,8 +1,7 @@
 export const ROLES = {
   ADMIN: "Admin",
-  DONOR: "Donor",
+  USER: "User",
   BLOOD_BANK: "Blood Bank",
-  SEEKER: "Seeker",
 };
 
 export const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];

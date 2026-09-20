@@ -35,7 +35,7 @@ export function EmergencyFindBlood() {
     }
     const params = new URLSearchParams({ blood_group: bloodGroup });
     if (location.trim()) params.set("city", location.trim());
-    navigate(`/seeker/search-donors?${params.toString()}`);
+    navigate(`/user/search-donors?${params.toString()}`);
   };
 
   return (

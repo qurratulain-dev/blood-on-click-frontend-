@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getUsers, updateDonor, updateBloodBank, updateSeeker, deleteUser, getAllRequests, updateRequestStatus } from "@/features/admin/api/admin";
+import { getUsers, updateUser, updateBloodBank, deleteUser, getAllRequests, updateRequestStatus } from "@/features/admin/api/admin";
 import { BLOOD_GROUPS } from "@/config/constants";
-import { Loader2, Edit2, Trash2, CheckCircle, XCircle, User, Building2, Search, ClipboardList, Save, X } from "lucide-react";
+import { Loader2, Edit2, Trash2, CheckCircle, XCircle, User, Building2, ClipboardList, Save, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const groupColors = {
@@ -13,14 +13,13 @@ const groupColors = {
 };
 
 const tabs = [
-  { key: "donors", icon: User, label: "Donors" },
+  { key: "users", icon: User, label: "Users" },
   { key: "banks", icon: Building2, label: "Blood Banks" },
-  { key: "seekers", icon: Search, label: "Seekers" },
   { key: "requests", icon: ClipboardList, label: "Requests" },
 ];
 
-function EditableRow({ user, type, columns, onSave, onCancel, onDelete }) {
-  const [form, setForm] = useState({ ...user });
+function EditableRow({ item, type, columns, onSave, onCancel }) {
+  const [form, setForm] = useState({ ...item });
   const [saving, setSaving] = useState(false);
 
   const handleChange = (e) => {
@@ -30,9 +29,8 @@ function EditableRow({ user, type, columns, onSave, onCancel, onDelete }) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (type === "donor") await updateDonor(user.id, form);
-      else if (type === "bank") await updateBloodBank(user.id, form);
-      else if (type === "seeker") await updateSeeker(user.id, form);
+      if (type === "user") await updateUser(item.id, form);
+      else if (type === "bank") await updateBloodBank(item.id, form);
       toast.success("Updated successfully!");
       onSave();
     } catch (err) {
@@ -44,7 +42,7 @@ function EditableRow({ user, type, columns, onSave, onCancel, onDelete }) {
 
   return (
     <tr className="bg-blue-50">
-      <td className="px-3 py-2">{user.id}</td>
+      <td className="px-3 py-2">{item.id}</td>
       {columns.map((col) => (
         <td key={col.key} className="px-3 py-2">
           {col.editable ? (
@@ -62,7 +60,7 @@ function EditableRow({ user, type, columns, onSave, onCancel, onDelete }) {
               />
             )
           ) : (
-            <span className="text-xs text-muted-foreground">{user[col.key] || "—"}</span>
+            <span className="text-xs text-muted-foreground">{item[col.key] || "—"}</span>
           )}
         </td>
       ))}
@@ -96,12 +94,11 @@ function UserTable({ data, type, columns, onEdit, onDelete, editingId }) {
             editingId === item.id ? (
               <EditableRow
                 key={item.id}
-                user={item}
+                item={item}
                 type={type}
                 columns={columns}
                 onSave={() => onEdit(null)}
                 onCancel={() => onEdit(null)}
-                onDelete={() => onDelete(item.id, type)}
               />
             ) : (
               <tr key={item.id} className="border-b hover:bg-gray-50">
@@ -116,7 +113,7 @@ function UserTable({ data, type, columns, onEdit, onDelete, editingId }) {
                     <button onClick={() => onEdit(item.id)} className="inline-flex items-center gap-1 rounded bg-yellow-500 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-yellow-600">
                       <Edit2 className="size-3" /> Edit
                     </button>
-                    <button onClick={() => { if (confirm("Delete this user?")) onDelete(item.id, type); }} className="inline-flex items-center gap-1 rounded bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-red-700">
+                    <button onClick={() => { if (confirm("Delete this record?")) onDelete(item.id, type); }} className="inline-flex items-center gap-1 rounded bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-red-700">
                       <Trash2 className="size-3" /> Delete
                     </button>
                   </div>
@@ -126,7 +123,7 @@ function UserTable({ data, type, columns, onEdit, onDelete, editingId }) {
           ) : (
             <tr>
               <td colSpan={columns.length + 2} className="px-3 py-12 text-center text-sm text-muted-foreground">
-                No {type} found.
+                No {type === "user" ? "users" : type === "bank" ? "blood banks" : "records"} found.
               </td>
             </tr>
           )}
@@ -137,7 +134,7 @@ function UserTable({ data, type, columns, onEdit, onDelete, editingId }) {
 }
 
 export function ManageUsers() {
-  const [activeTab, setActiveTab] = useState("donors");
+  const [activeTab, setActiveTab] = useState("users");
   const [editingId, setEditingId] = useState(null);
   const queryClient = useQueryClient();
 
@@ -180,13 +177,13 @@ export function ManageUsers() {
 
   const counts = data?.counts || {};
 
-  const donorCols = [
-    { key: "full_name", label: "Name" },
+  const userCols = [
+    { key: "full_name", label: "Name", editable: true },
     { key: "email", label: "Email", editable: false },
     { key: "phone", label: "Phone", editable: true },
-    { key: "blood_group", label: "Group", render: (d) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${groupColors[d.blood_group] || "bg-gray-100"}`}>{d.blood_group}</span>, editable: true, type: "select", options: BLOOD_GROUPS },
-    { key: "age", label: "Age/Wt", render: (d) => `${d.age}/${d.weight}kg`, editable: true },
-    { key: "status", label: "Status", render: (d) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${d.status === "available" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>{d.status}</span>, editable: true, type: "select", options: ["available", "not_available"] },
+    { key: "blood_group", label: "Group", render: (u) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${groupColors[u.blood_group] || "bg-gray-100"}`}>{u.blood_group}</span>, editable: true, type: "select", options: BLOOD_GROUPS },
+    { key: "age", label: "Age/Wt", render: (u) => `${u.age}/${u.weight}kg`, editable: true },
+    { key: "status", label: "Status", render: (u) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${u.status === "available" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>{u.status}</span>, editable: true, type: "select", options: ["available", "not_available"] },
   ];
 
   const bankCols = [
@@ -197,15 +194,8 @@ export function ManageUsers() {
     { key: "status", label: "Status", render: (b) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${b.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{b.status}</span>, editable: true, type: "select", options: ["active", "inactive"] },
   ];
 
-  const seekerCols = [
-    { key: "full_name", label: "Name", editable: true },
-    { key: "email", label: "Email", editable: false },
-    { key: "phone", label: "Phone", editable: true },
-    { key: "address", label: "Address", render: (s) => s.address?.length > 40 ? s.address.slice(0, 40) + "..." : s.address || "—", editable: true },
-  ];
-
   const handleDelete = (id, type) => {
-    delMut.mutate({ type, id });
+    delMut.mutate({ type: type === "bank" ? "bank" : "user", id });
   };
 
   return (
@@ -213,7 +203,6 @@ export function ManageUsers() {
       <h2 className="mb-1 text-2xl font-bold">Manage Users</h2>
       <hr className="mb-6" />
 
-      {/* Tabs */}
       <div className="mb-4 flex gap-1 rounded-lg bg-gray-200 p-1">
         {tabs.map(({ key, icon: Icon, label }) => (
           <button
@@ -232,19 +221,17 @@ export function ManageUsers() {
         ))}
       </div>
 
-      {/* Donors Tab */}
-      {activeTab === "donors" && (
+      {activeTab === "users" && (
         <UserTable
-          data={data?.donors}
-          type="donor"
-          columns={donorCols}
+          data={data?.users}
+          type="user"
+          columns={userCols}
           onEdit={(id) => setEditingId(id)}
           onDelete={handleDelete}
           editingId={editingId}
         />
       )}
 
-      {/* Banks Tab */}
       {activeTab === "banks" && (
         <UserTable
           data={data?.blood_banks}
@@ -256,19 +243,6 @@ export function ManageUsers() {
         />
       )}
 
-      {/* Seekers Tab */}
-      {activeTab === "seekers" && (
-        <UserTable
-          data={data?.seekers}
-          type="seeker"
-          columns={seekerCols}
-          onEdit={(id) => setEditingId(id)}
-          onDelete={handleDelete}
-          editingId={editingId}
-        />
-      )}
-
-      {/* Requests Tab */}
       {activeTab === "requests" && (
         <>
           {reqLoading ? (
@@ -281,7 +255,7 @@ export function ManageUsers() {
                 <thead className="bg-red-50 text-xs uppercase text-red-800">
                   <tr>
                     <th className="px-3 py-3 font-semibold">ID</th>
-                    <th className="px-3 py-3 font-semibold">Seeker</th>
+                    <th className="px-3 py-3 font-semibold">Requested By</th>
                     <th className="px-3 py-3 font-semibold">Blood Bank</th>
                     <th className="px-3 py-3 font-semibold">Group</th>
                     <th className="px-3 py-3 font-semibold">Units</th>
@@ -295,7 +269,7 @@ export function ManageUsers() {
                   {requestsData?.length > 0 ? requestsData.map((r) => (
                     <tr key={r.id} className="border-b hover:bg-gray-50">
                       <td className="px-3 py-3 font-medium">{r.id}</td>
-                      <td className="px-3 py-3">{r.seeker_name}</td>
+                      <td className="px-3 py-3">{r.user_name}</td>
                       <td className="px-3 py-3">{r.bank_name}</td>
                       <td className="px-3 py-3">
                         <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold text-white ${groupColors[r.blood_group] || "bg-gray-600"}`}>{r.blood_group}</span>

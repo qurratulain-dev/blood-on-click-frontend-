@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const role_type = z.enum(["donor", "blood_bank", "seeker"], {
+const role_type = z.enum(["user", "blood_bank"], {
   errorMap: () => ({ message: "Invalid role selected" }),
 });
 const name = z.string().min(2, "Name must be at least 2 characters").max(255, "Name must be at most 255 characters");
@@ -16,7 +16,7 @@ const gender = z.enum(["Male", "Female", "Other"], {
   errorMap: () => ({ message: "Please select a valid gender" }),
 });
 
-const donorSchema = z.object({
+const userSchema = z.object({
   role_type,
   name,
   username,
@@ -50,18 +50,4 @@ const bloodBankSchema = z.object({
   path: ["password_confirmation"],
 });
 
-const seekerSchema = z.object({
-  role_type,
-  name,
-  username,
-  email,
-  password,
-  password_confirmation: z.string(),
-  phone,
-  address,
-}).refine((data) => data.password === data.password_confirmation, {
-  message: "Passwords do not match",
-  path: ["password_confirmation"],
-});
-
-export { donorSchema, bloodBankSchema, seekerSchema };
+export { userSchema, bloodBankSchema };

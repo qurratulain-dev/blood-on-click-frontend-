@@ -64,7 +64,7 @@ export function NewAssessment() {
     e.preventDefault();
     const payload = {
       ...form,
-      donor_id: Number(form.donor_id),
+      user_id: Number(form.donor_id),
       hemoglobin: form.hemoglobin ? Number(form.hemoglobin) : null,
       temperature: form.temperature ? Number(form.temperature) : null,
       pulse: form.pulse ? Number(form.pulse) : null,

@@ -1,8 +1,7 @@
-import { Building2, Droplet, HeartHandshake, UserRound } from "lucide-react";
+import { Building2, Droplet, HeartHandshake } from "lucide-react";
 
 const roles = [
-  { icon: HeartHandshake, label: "Donor" },
-  { icon: UserRound, label: "Seeker" },
+  { icon: HeartHandshake, label: "User" },
   { icon: Building2, label: "Blood Bank" },
 ];
 
@@ -49,7 +48,7 @@ export function RegisterBrandPanel() {
                 <Droplet className="size-7" />
               </span>
               <div className="h-5 w-px border-l border-dashed border-white/30" />
-              <div className="grid w-full grid-cols-3 gap-2">
+              <div className="grid w-full grid-cols-2 gap-2">
                 {roles.map(({ icon: Icon, label }) => (
                   <div
                     key={label}

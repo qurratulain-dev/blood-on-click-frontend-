@@ -16,12 +16,12 @@ export function ViewAssessment() {
   });
 
   const { data: history } = useQuery({
-    queryKey: ["donor-assessment-history", assessment?.donor_id],
+    queryKey: ["donor-assessment-history", assessment?.user_id],
     queryFn: async () => {
-      const res = await getDonorAssessmentHistory(assessment.donor_id);
+      const res = await getDonorAssessmentHistory(assessment.user_id);
       return res.data;
     },
-    enabled: !!assessment?.donor_id,
+    enabled: !!assessment?.user_id,
   });
 
   if (isLoading) {

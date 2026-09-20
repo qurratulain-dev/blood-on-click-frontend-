@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { BLOOD_GROUPS, GROUP_COLORS, ROLES } from "@/config/constants";
-import { searchBanks } from "@/features/seeker/api/seeker";
+import { searchBanks } from "@/features/user/api/User";
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -125,7 +125,7 @@ function InfoPanel() {
         </div>
         <h3 className="mt-4 text-lg font-semibold tracking-tight">Blood availability overview</h3>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-          See which blood groups are stocked across participating blood banks on Seeker accounts.
+          See which blood groups are stocked across participating blood banks on User accounts.
         </p>
         {!isAuthenticated && (
           <Button
@@ -186,7 +186,7 @@ function ErrorPanel({ onRetry }) {
 
 export function BloodAvailability() {
   const { isAuthenticated, role, loading: authLoading } = useAuthStore();
-  const isSeeker = isAuthenticated && role === ROLES.SEEKER;
+  const isUser = isAuthenticated && role === ROLES.USER;
 
   const { data: banks, isPending, isError, refetch } = useQuery({
     queryKey: ["landing-blood-availability"],
@@ -194,7 +194,7 @@ export function BloodAvailability() {
       const response = await searchBanks({});
       return response.data;
     },
-    enabled: isSeeker,
+    enabled: isUser,
     retry: false,
   });
 
@@ -218,13 +218,13 @@ export function BloodAvailability() {
   const hasBanks = Array.isArray(banks) && banks.length > 0;
 
   let content;
-  if (authLoading || (isSeeker && isPending)) {
+  if (authLoading || (isUser && isPending)) {
     content = <SkeletonGrid />;
-  } else if (isSeeker && isError) {
+  } else if (isUser && isError) {
     content = <ErrorPanel onRetry={() => refetch()} />;
-  } else if (isSeeker && !hasBanks) {
+  } else if (isUser && !hasBanks) {
     content = <EmptyPanel />;
-  } else if (isSeeker) {
+  } else if (isUser) {
     content = (
       <>
         <ul className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
@@ -252,7 +252,7 @@ export function BloodAvailability() {
                   {total.quantity} unit{total.quantity === 1 ? "" : "s"} in the network
                 </p>
                 <Link
-                  to="/seeker/search-banks"
+                  to="/user/search-banks"
                   className="group mt-4 inline-flex items-center gap-1 text-sm font-medium text-red-700 transition-colors hover:text-red-800"
                 >
                   View blood banks
@@ -276,7 +276,7 @@ export function BloodAvailability() {
                 </p>
               </div>
               <Link
-                to="/seeker/search-banks"
+                to="/user/search-banks"
                 className="group inline-flex items-center gap-1 text-sm font-medium text-red-700 transition-colors hover:text-red-800"
               >
                 View all blood banks

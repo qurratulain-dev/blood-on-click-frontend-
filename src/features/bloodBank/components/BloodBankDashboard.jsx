@@ -142,7 +142,7 @@ export function BloodBankDashboard() {
               <tbody>
                 {data.recent_requests.map((r) => (
                   <tr key={r.id} className="border-b text-sm last:border-0 hover:bg-gray-50">
-                    <td className="py-2.5">{r.seeker_name}</td>
+                    <td className="py-2.5">{r.user_name}</td>
                     <td className="py-2.5">
                       <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${GROUP_COLORS[r.blood_group] || "bg-gray-100 text-gray-800"}`}>
                         {r.blood_group}

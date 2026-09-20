@@ -7,8 +7,7 @@ import toast from "react-hot-toast";
 const roleRoutes = {
   Admin: "/admin",
   "Blood Bank": "/blood-bank",
-  Donor: "/donor",
-  Seeker: "/seeker",
+  User: "/user",
 };
 
 export function useLogin() {

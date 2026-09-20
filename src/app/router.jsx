@@ -2,8 +2,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BloodBankLayout } from "@/components/layout/BloodBankLayout";
-import { DonorLayout } from "@/components/layout/DonorLayout";
-import { SeekerLayout } from "@/components/layout/SeekerLayout";
+import { UserLayout } from "@/components/layout/UserLayout";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { HomePage } from "@/features/landing/components/HomePage";
 import { EmergencyPage } from "@/features/emergency/components/EmergencyPage";
@@ -27,17 +26,15 @@ import { ManageStock } from "@/features/bloodBank/components/ManageStock";
 import { ViewRequests } from "@/features/bloodBank/components/ViewRequests";
 import { BankNotifications } from "@/features/bloodBank/components/Notifications";
 import { Reports } from "@/features/bloodBank/components/Reports";
-import { DonorDashboard } from "@/features/donor/components/DonorDashboard";
-import { DonationHistory } from "@/features/donor/components/DonationHistory";
-import { EditProfile as DonorEditProfile } from "@/features/donor/components/EditProfile";
-import { SearchBanks } from "@/features/donor/components/SearchBanks";
-import { MedicalReports } from "@/features/donor/components/MedicalReports";
-import { Notifications as DonorNotifications } from "@/features/donor/components/Notifications";
-import { SeekerDashboard } from "@/features/seeker/components/SeekerDashboard";
+import { UserDashboard } from "@/features/user/components/UserDashboard";
+import { DonationHistory } from "@/features/user/components/DonationHistory";
+import { EditProfile as UserEditProfile } from "@/features/user/components/EditProfile";
+import { SearchBanks } from "@/features/user/components/SearchBanks";
+import { SearchUsers } from "@/features/user/components/SearchUsers";
+import { MyBloodRequests } from "@/features/user/components/MyBloodRequests";
+import { MedicalReports } from "@/features/user/components/MedicalReports";
+import { Notifications as UserNotifications } from "@/features/user/components/Notifications";
 import { NotFoundPage } from "@/features/not-found/NotFoundPage";
-import { SearchBanks as SeekerSearchBanks } from "@/features/seeker/components/SearchBanks";
-import { SearchDonors as SeekerSearchDonors } from "@/features/seeker/components/SearchDonors";
-import { Notifications as SeekerNotifications } from "@/features/seeker/components/Notifications";
 
 const router = createBrowserRouter([
   {
@@ -96,34 +93,21 @@ const router = createBrowserRouter([
   },
   {
     element: (
-      <ProtectedRoute role="Donor">
-        <DonorLayout>
+      <ProtectedRoute role="User">
+        <UserLayout>
           <Outlet />
-        </DonorLayout>
+        </UserLayout>
       </ProtectedRoute>
     ),
     children: [
-      { path: "/donor", element: <DonorDashboard /> },
-      { path: "/donor/edit-profile", element: <DonorEditProfile /> },
-      { path: "/donor/search-banks", element: <SearchBanks /> },
-      { path: "/donor/medical-reports", element: <MedicalReports /> },
-      { path: "/donor/donation-history", element: <DonationHistory /> },
-      { path: "/donor/notifications", element: <DonorNotifications /> },
-    ],
-  },
-  {
-    element: (
-      <ProtectedRoute role="Seeker">
-        <SeekerLayout>
-          <Outlet />
-        </SeekerLayout>
-      </ProtectedRoute>
-    ),
-    children: [
-      { path: "/seeker", element: <SeekerDashboard /> },
-      { path: "/seeker/search-donors", element: <SeekerSearchDonors /> },
-      { path: "/seeker/search-banks", element: <SeekerSearchBanks /> },
-      { path: "/seeker/notifications", element: <SeekerNotifications /> },
+      { path: "/user", element: <UserDashboard /> },
+      { path: "/user/edit-profile", element: <UserEditProfile /> },
+      { path: "/user/search-banks", element: <SearchBanks /> },
+      { path: "/user/search-donors", element: <SearchUsers /> },
+      { path: "/user/my-requests", element: <MyBloodRequests /> },
+      { path: "/user/donation-history", element: <DonationHistory /> },
+      { path: "/user/medical-reports", element: <MedicalReports /> },
+      { path: "/user/notifications", element: <UserNotifications /> },
     ],
   },
 ]);

@@ -51,7 +51,7 @@ export function EmergencyFinalCTA() {
                 size="lg"
                 className="group h-11 w-full gap-2 bg-white px-6 text-base text-red-700 shadow-sm shadow-red-900/20 hover:bg-red-50 hover:text-red-800 sm:w-auto"
               >
-                <Link to="/seeker/search-donors">
+                <Link to="/user/search-donors">
                   Find Blood
                   <Search
                     className="size-4 transition-transform group-hover:scale-110"
@@ -65,7 +65,7 @@ export function EmergencyFinalCTA() {
                 variant="outline"
                 className="h-11 w-full gap-2 border-white/40 bg-transparent px-6 text-base text-white hover:border-white/60 hover:bg-white/10 hover:text-white sm:w-auto"
               >
-                <Link to="/register?role=donor">
+                <Link to="/register?role=user">
                   <HeartHandshake className="size-4" aria-hidden="true" />
                   Become a Donor
                 </Link>

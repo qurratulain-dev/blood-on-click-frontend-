@@ -24,7 +24,7 @@ const SUPPORT_CARDS = [
     description:
       "Start a blood search and explore available donor resources using the existing search flow.",
     ctaLabel: "Find Blood",
-    to: "/seeker/search-donors",
+    to: "/user/search-donors",
   },
   {
     number: "03",
@@ -33,7 +33,7 @@ const SUPPORT_CARDS = [
     description:
       "Create a donor account and become part of the Blood on Click donor community.",
     ctaLabel: "Become a Donor",
-    to: "/register?role=donor",
+    to: "/register?role=user",
   },
 ];
 

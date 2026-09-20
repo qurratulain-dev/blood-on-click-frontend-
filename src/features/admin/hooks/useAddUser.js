@@ -1,14 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addDonor, addBloodBank, addSeeker } from "@/features/admin/api/admin";
+import { addUser, addBloodBank } from "@/features/admin/api/admin";
 import toast from "react-hot-toast";
 
 export function useAddUser() {
   const queryClient = useQueryClient();
 
   const apiMap = {
-    donor: addDonor,
+    user: addUser,
     blood_bank: addBloodBank,
-    seeker: addSeeker,
   };
 
   return useMutation({

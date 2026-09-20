@@ -4,44 +4,17 @@ import { Eye, EyeOff, Loader2, LogIn, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const roleLabels = {
-  donor: "Donor",
-  blood_bank: "Blood Bank",
-  seeker: "Seeker",
-  admin: "Admin",
-};
-
 export function LoginForm({
   register,
   errors,
   onSubmit,
   isPending,
-  selectedRole,
-  onChangeRole,
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      <input type="hidden" {...register("role_type")} />
-
       <div className="space-y-5 motion-safe:animate-fade-up motion-safe:[animation-delay:240ms]">
-        {selectedRole ? (
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-red-100 bg-red-50/70 px-3.5 py-2.5">
-            <span className="text-sm text-red-700">
-              Signing in as{" "}
-              <span className="font-semibold">{roleLabels[selectedRole]}</span>
-            </span>
-            <button
-              type="button"
-              onClick={onChangeRole}
-              className="rounded-md px-1.5 py-1 text-xs font-semibold text-red-600 transition-colors hover:text-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40"
-            >
-              Change
-            </button>
-          </div>
-        ) : null}
-
         <div className="space-y-2">
           <label
             htmlFor="login-email"

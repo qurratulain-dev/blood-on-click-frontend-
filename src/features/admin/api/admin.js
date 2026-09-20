@@ -8,16 +8,12 @@ export function getCounts() {
   return api.get("/admin/counts");
 }
 
-export function addDonor(data) {
-  return api.post("/admin/add-donor", data);
+export function addUser(data) {
+  return api.post("/admin/add-user", data);
 }
 
 export function addBloodBank(data) {
   return api.post("/admin/add-blood-bank", data);
-}
-
-export function addSeeker(data) {
-  return api.post("/admin/add-seeker", data);
 }
 
 export function getAssessments() {
@@ -71,16 +67,12 @@ export function getUsers() {
   return api.get("/admin/users");
 }
 
-export function updateDonor(id, data) {
-  return api.put(`/admin/donors/${id}`, data);
+export function updateUser(id, data) {
+  return api.put(`/admin/users/${id}`, data);
 }
 
 export function updateBloodBank(id, data) {
   return api.put(`/admin/blood-banks/${id}`, data);
-}
-
-export function updateSeeker(id, data) {
-  return api.put(`/admin/seekers/${id}`, data);
 }
 
 export function deleteUser(type, id) {
@@ -103,6 +95,6 @@ export function sendRecommendation(data) {
   return api.post("/admin/recommend-bank", data);
 }
 
-export function getDonorAssessmentHistory(donorId) {
-  return api.get(`/admin/assessments/donor/${donorId}`);
+export function getDonorAssessmentHistory(userId) {
+  return api.get(`/admin/assessments/user/${userId}`);
 }
