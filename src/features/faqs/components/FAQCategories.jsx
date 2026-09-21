@@ -17,21 +17,21 @@ const faqItems = [
     category: "General",
     question: "What can I do on Blood on Click?",
     answer:
-      "Registered users can search for blood resources, register as a donor or blood bank, submit blood requests, and access a role-based dashboard after signing in.",
+      "Registered users can search for blood resources, submit blood requests, donate blood, and access their dashboard after signing in. Blood banks get a dedicated dashboard, and admins oversee the platform.",
   },
   {
     id: 3,
     category: "Finding Blood",
     question: "How can I search for blood donors?",
     answer:
-      "After signing in as a Seeker, open the Search Donors page and enter the blood group and, optionally, a location to see matching donor profiles.",
+      "After signing in, open the Find Donors page and enter the blood group and, optionally, a location to see matching donor profiles.",
   },
   {
     id: 4,
     category: "Finding Blood",
     question: "Can I search by blood group and location?",
     answer:
-      "Yes. Both the Emergency search and the Seeker search let you narrow results by blood group and an optional city or area.",
+      "Yes. Both the Emergency search and the Find Donors page let you narrow results by blood group and an optional city or area.",
   },
   {
     id: 5,
@@ -43,16 +43,16 @@ const faqItems = [
   {
     id: 6,
     category: "Donors",
-    question: "How do I become a blood donor?",
+    question: "How do I start donating blood?",
     answer:
-      "Choose the donor role on the Register page and provide your information, including blood group, age, weight, gender, phone, and address.",
+      "Create a User account and provide your information, including blood group, age, weight, gender, phone, and address. You can then record donations whenever you're eligible and track them in My Donations.",
   },
   {
     id: 7,
     category: "Donors",
-    question: "Can donors manage their availability or profile?",
+    question: "Can I manage my availability or profile?",
     answer:
-      "Yes. Donors can update their profile from the donor dashboard, including their donation status (available or not available), contact details, and other personal information.",
+      "Yes. You can update your profile from your dashboard, including your donation status (available or not available), contact details, and other personal information.",
   },
   {
     id: 8,
@@ -73,14 +73,14 @@ const faqItems = [
     category: "Accounts",
     question: "Do I need an account to search for blood?",
     answer:
-      "Yes. Searching for blood resources is limited to signed-in Seeker accounts, so you will be asked to sign in or register first.",
+      "Yes. Searching for blood resources is limited to signed-in user accounts, so you will be asked to sign in or register first.",
   },
   {
     id: 11,
     category: "Accounts",
     question: "How do I access my dashboard?",
     answer:
-      "After signing in, you are directed to the dashboard for your role — Seeker, Donor, Blood Bank, or Admin — where you can manage your requests, profile, or stock.",
+      "After signing in, you are directed to the dashboard for your role — User, Blood Bank, or Admin — where you can manage your blood requests, donations, profile, or stock.",
   },
 ];
 

@@ -20,6 +20,10 @@ export function searchDonors(params) {
   return api.get("/user/donors", { params });
 }
 
+export function getDonorContact(userId) {
+  return api.get(`/user/donors/${userId}/contact`);
+}
+
 export function getRequests() {
   return api.get("/user/requests");
 }
@@ -30,6 +34,14 @@ export function createRequest(data) {
 
 export function getDonations() {
   return api.get("/user/donations");
+}
+
+export function getEligibility() {
+  return api.get("/user/eligibility");
+}
+
+export function requestAssessment() {
+  return api.post("/user/assessment-requests");
 }
 
 export function createDonation(data) {

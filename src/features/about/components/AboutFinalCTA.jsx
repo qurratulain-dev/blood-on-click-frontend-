@@ -37,7 +37,7 @@ export function AboutFinalCTA() {
             </h2>
 
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:240ms] sm:text-lg">
-              Search Blood on Click when you need blood, or join as a donor to
+              Search Blood on Click when you need blood, or join with one account to
               make blood resources easier to find for those who need them.
             </p>
 
@@ -63,7 +63,7 @@ export function AboutFinalCTA() {
               >
                 <Link to="/register?role=user">
                   <HeartHandshake className="size-4" aria-hidden="true" />
-                  Become a Donor
+                  Join &amp; Start Donating
                 </Link>
               </Button>
             </div>

@@ -29,10 +29,10 @@ const SUPPORT_CARDS = [
   {
     number: "03",
     icon: HeartHandshake,
-    title: "Want to Become a Donor?",
+    title: "Want to Start Donating?",
     description:
-      "Create a donor account and become part of the Blood on Click donor community.",
-    ctaLabel: "Become a Donor",
+      "Create an account and become part of the Blood on Click donor community.",
+    ctaLabel: "Join & Donate",
     to: "/register?role=user",
   },
 ];

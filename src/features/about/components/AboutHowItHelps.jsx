@@ -19,7 +19,7 @@ const PARTICIPANTS = [
     icon: HeartHandshake,
     title: "Blood donors",
     description:
-      "Donors can create a profile, provide their blood information and availability, and participate in the platform's donor network.",
+      "Users can create a profile, provide their blood information and availability, and participate in the platform's donor network.",
   },
   {
     number: "03",
@@ -145,8 +145,8 @@ export function AboutHowItHelps() {
             One platform, three ways to connect
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            Blood on Click provides different experiences for people looking
-            for blood, blood donors, and blood banks.
+            Blood on Click connects people looking for blood, people who donate
+            blood, and blood banks through one user account.
           </p>
         </div>
 

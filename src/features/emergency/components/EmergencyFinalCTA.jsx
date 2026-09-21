@@ -67,7 +67,7 @@ export function EmergencyFinalCTA() {
               >
                 <Link to="/register?role=user">
                   <HeartHandshake className="size-4" aria-hidden="true" />
-                  Become a Donor
+                  Join &amp; Start Donating
                 </Link>
               </Button>
             </div>

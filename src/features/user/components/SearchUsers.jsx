@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { searchDonors, createRequest } from "@/features/user/api/User";
+import { searchDonors, createRequest, getDonorContact } from "@/features/user/api/User";
 import { BLOOD_GROUPS, GROUP_COLORS } from "@/config/constants";
-import { Loader2, Search, MapPin, Phone, User, Calendar, Weight, Droplet, Clock, X, AlertTriangle, Building2, Frown, SearchX } from "lucide-react";
+import { Loader2, Search, MapPin, Phone, User, Droplet, X, AlertTriangle, Building2, Frown, SearchX } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -47,6 +47,21 @@ export function SearchUsers() {
     },
   });
 
+  const contactMutation = useMutation({
+    mutationFn: (donorId) => getDonorContact(donorId),
+    onSuccess: (res) => {
+      const phone = res.data?.phone;
+      if (phone) {
+        window.location.href = `tel:${phone}`;
+      } else {
+        toast.error("Phone number not available");
+      }
+    },
+    onError: () => {
+      toast.error("Phone number not available");
+    },
+  });
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (!bloodGroup) {
@@ -56,12 +71,8 @@ export function SearchUsers() {
     setLocationQuery(location);
   };
 
-  const contactDonor = (phone) => {
-    if (phone) {
-      window.location.href = `tel:${phone}`;
-    } else {
-      toast.error("Phone number not available");
-    }
+  const contactDonor = (donorId) => {
+    contactMutation.mutate(donorId);
   };
 
   const openRequestModal = (donor) => {
@@ -187,33 +198,16 @@ export function SearchUsers() {
                       <hr />
                       <div className="mt-3 space-y-2 text-sm">
                         <p className="flex items-center gap-2">
-                          <Phone className="size-4 text-gray-400" />
-                          {donor.phone}
+                          <MapPin className="size-4 text-gray-400" />
+                          {donor.city || "Location not specified"}
                         </p>
-                        <p className="flex items-start gap-2">
-                          <MapPin className="mt-0.5 size-4 shrink-0 text-gray-400" />
-                          <span>{donor.address}</span>
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <Calendar className="size-4 text-gray-400" />
-                          Age: {donor.age} years
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <Weight className="size-4 text-gray-400" />
-                          Weight: {donor.weight} kg
-                        </p>
-                        {donor.last_donation_date_formatted && (
-                          <p className="flex items-center gap-2">
-                            <Clock className="size-4 text-gray-400" />
-                            Last Donation: {donor.last_donation_date_formatted}
-                          </p>
-                        )}
                       </div>
                     </div>
                     <div className="flex gap-2 border-t p-4">
                       <button
-                        onClick={() => contactDonor(donor.phone)}
-                        className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-green-600 px-3 py-2 text-xs font-medium text-white hover:bg-green-700"
+                        onClick={() => contactDonor(donor.id)}
+                        disabled={contactMutation.isPending}
+                        className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-green-600 px-3 py-2 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-60"
                       >
                         <Phone className="size-3" />
                         Contact Donor

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers, updateUser, updateBloodBank, deleteUser, getAllRequests, updateRequestStatus } from "@/features/admin/api/admin";
 import { BLOOD_GROUPS } from "@/config/constants";
-import { Loader2, Edit2, Trash2, CheckCircle, XCircle, User, Building2, ClipboardList, Save, X } from "lucide-react";
+import { Loader2, Edit2, Trash2, CheckCircle, XCircle, User, Building2, ClipboardList, Save, X, Power, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 const groupColors = {
@@ -78,7 +78,7 @@ function EditableRow({ item, type, columns, onSave, onCancel }) {
   );
 }
 
-function UserTable({ data, type, columns, onEdit, onDelete, editingId }) {
+function UserTable({ data, type, columns, onEdit, onDelete, editingId, onToggleStatus, accountPendingId }) {
   return (
     <div className="overflow-x-auto rounded-xl border bg-white shadow-sm">
       <table className="w-full text-left text-sm">
@@ -110,6 +110,18 @@ function UserTable({ data, type, columns, onEdit, onDelete, editingId }) {
                 ))}
                 <td className="px-3 py-3">
                   <div className="flex gap-1">
+                    {onToggleStatus && (
+                      <button
+                        onClick={() => onToggleStatus(item, type)}
+                        disabled={accountPendingId === item.id}
+                        className={`inline-flex items-center gap-1 rounded px-2.5 py-1.5 text-xs font-medium text-white disabled:opacity-50 ${
+                          item.is_active ? "bg-orange-500 hover:bg-orange-600" : "bg-green-600 hover:bg-green-700"
+                        }`}
+                      >
+                        {accountPendingId === item.id ? <Loader2 className="size-3 animate-spin" /> : <Power className="size-3" />}
+                        {item.is_active ? "Deactivate" : "Activate"}
+                      </button>
+                    )}
                     <button onClick={() => onEdit(item.id)} className="inline-flex items-center gap-1 rounded bg-yellow-500 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-yellow-600">
                       <Edit2 className="size-3" /> Edit
                     </button>
@@ -161,10 +173,32 @@ export function ManageUsers() {
     onError: (err) => toast.error(err.response?.data?.message || "Delete failed"),
   });
 
+  const accountMut = useMutation({
+    mutationFn: ({ type, id, isActive }) =>
+      type === "bank" ? updateBloodBank(id, { is_active: isActive }) : updateUser(id, { is_active: isActive }),
+    onSuccess: (_data, variables) => {
+      toast.success(variables.isActive ? "Account activated" : "Account deactivated");
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+    onError: (err) => toast.error(err.response?.data?.message || "Action failed"),
+  });
+
+  const accountPendingId = accountMut.isPending ? accountMut.variables?.id : null;
+
+  const handleToggleStatus = (item, type) => {
+    const target = !item.is_active;
+    if (!target) {
+      const label = type === "bank" ? "blood bank" : "user";
+      const confirmed = confirm(`Deactivate ${label} "${item.full_name}"? They will not be able to log in or use the app until reactivated.`);
+      if (!confirmed) return;
+    }
+    accountMut.mutate({ type, id: item.id, isActive: target });
+  };
+
   const reqStatusMut = useMutation({
     mutationFn: ({ id, status }) => updateRequestStatus(id, status),
     onSuccess: () => { toast.success("Status updated!"); queryClient.invalidateQueries({ queryKey: ["admin-all-requests"] }); },
-    onError: (err) => toast.error("Failed to update"),
+    onError: (err) => toast.error(err.response?.data?.message || "Failed to update"),
   });
 
   if (isLoading) {
@@ -184,6 +218,7 @@ export function ManageUsers() {
     { key: "blood_group", label: "Group", render: (u) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${groupColors[u.blood_group] || "bg-gray-100"}`}>{u.blood_group}</span>, editable: true, type: "select", options: BLOOD_GROUPS },
     { key: "age", label: "Age/Wt", render: (u) => `${u.age}/${u.weight}kg`, editable: true },
     { key: "status", label: "Status", render: (u) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${u.status === "available" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>{u.status}</span>, editable: true, type: "select", options: ["available", "not_available"] },
+    { key: "is_active", label: "Account", render: (u) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${u.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{u.is_active ? "Active" : "Inactive"}</span> },
   ];
 
   const bankCols = [
@@ -192,6 +227,7 @@ export function ManageUsers() {
     { key: "phone", label: "Phone", editable: true },
     { key: "registration_number", label: "Reg No", editable: true },
     { key: "status", label: "Status", render: (b) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${b.status === "active" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{b.status}</span>, editable: true, type: "select", options: ["active", "inactive"] },
+    { key: "is_active", label: "Account", render: (b) => <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${b.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{b.is_active ? "Active" : "Inactive"}</span> },
   ];
 
   const handleDelete = (id, type) => {
@@ -229,6 +265,8 @@ export function ManageUsers() {
           onEdit={(id) => setEditingId(id)}
           onDelete={handleDelete}
           editingId={editingId}
+          onToggleStatus={handleToggleStatus}
+          accountPendingId={accountPendingId}
         />
       )}
 
@@ -240,6 +278,8 @@ export function ManageUsers() {
           onEdit={(id) => setEditingId(id)}
           onDelete={handleDelete}
           editingId={editingId}
+          onToggleStatus={handleToggleStatus}
+          accountPendingId={accountPendingId}
         />
       )}
 
@@ -292,11 +332,17 @@ export function ManageUsers() {
                       <td className="px-3 py-3 whitespace-nowrap">{r.requested_date}</td>
                       <td className="px-3 py-3">
                         {r.status === "pending" ? (
-                          <div className="flex gap-1">
-                            <button onClick={() => reqStatusMut.mutate({ id: r.id, status: "approved" })}
-                              className="inline-flex items-center gap-1 rounded bg-green-600 px-2 py-1 text-xs font-medium text-white hover:bg-green-700">
-                              <CheckCircle className="size-3" /> Approve
-                            </button>
+                          <div className="flex flex-col gap-1">
+                            {r.bank_id ? (
+                              <button onClick={() => reqStatusMut.mutate({ id: r.id, status: "approved" })}
+                                className="inline-flex items-center gap-1 rounded bg-green-600 px-2 py-1 text-xs font-medium text-white hover:bg-green-700">
+                                <CheckCircle className="size-3" /> Approve
+                              </button>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-xs text-amber-600">
+                                <AlertCircle className="size-3" /> Unassigned
+                              </span>
+                            )}
                             <button onClick={() => reqStatusMut.mutate({ id: r.id, status: "rejected" })}
                               className="inline-flex items-center gap-1 rounded bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700">
                               <XCircle className="size-3" /> Reject

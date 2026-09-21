@@ -34,7 +34,7 @@ export function FAQHero() {
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:240ms]">
             Find answers to common questions about Blood on Click, blood
-            searches, donor registration, and how the platform works.
+            searches, donating blood, and how the platform works.
           </p>
         </div>
       </div>

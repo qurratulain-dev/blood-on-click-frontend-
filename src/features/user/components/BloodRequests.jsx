@@ -91,7 +91,7 @@ function MyBloodRequestsEmpty() {
         When you need blood, you can request it from a blood bank or a matching donor.
       </p>
       <Link
-        to="/user/search-banks"
+        to="/user/request-blood"
         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 text-sm font-medium text-white transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
       >
         Request blood
@@ -121,7 +121,7 @@ function MyBloodRequestsError({ onRetry }) {
   );
 }
 
-export function MyBloodRequests() {
+export function BloodRequests() {
   const { data: requests, isPending, isError, refetch } = useQuery({
     queryKey: ["user-requests"],
     queryFn: async () => {

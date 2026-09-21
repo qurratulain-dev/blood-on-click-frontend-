@@ -366,7 +366,7 @@ export function EmergencyBloodSearch() {
                               <div className="min-w-0 flex-1">
                                 <p className="truncate text-sm font-medium">{donor.full_name}</p>
                                 <p className="truncate text-xs text-muted-foreground">
-                                  {donor.address}
+                                  {donor.city}
                                 </p>
                               </div>
                               <span className={`shrink-0 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${GROUP_COLORS[donor.blood_group] || "bg-gray-100 text-gray-800"}`}>

@@ -38,7 +38,7 @@ export function UserProfileSnapshot({ profile }) {
 
   const fullName = profile?.full_name;
   const bloodGroup = profile?.blood_group;
-  const email = UserProfile?.user?.email;
+  const email = UserProfile?.email;
 
   return (
     <section className="motion-safe:animate-fade-up [animation-delay:400ms]">
@@ -51,7 +51,7 @@ export function UserProfileSnapshot({ profile }) {
           </p>
         </div>
         <Link
-          to="/user/edit-profile"
+          to="/user/profile"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 text-sm font-medium text-white transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
         >
           Edit profile

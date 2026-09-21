@@ -3,6 +3,7 @@ import { UserSummaryCards } from "@/features/user/components/dashboard/UserSumma
 import { UserQuickActions } from "@/features/user/components/dashboard/UserQuickActions";
 import { UserAvailabilityEligibility } from "@/features/user/components/dashboard/UserAvailabilityEligibility";
 import { UserDonationHistory } from "@/features/user/components/dashboard/UserDonationHistory";
+import { UserBloodRequests } from "@/features/user/components/dashboard/UserBloodRequests";
 import { UserNotifications } from "@/features/user/components/dashboard/UserNotifications";
 import { UserProfileSnapshot } from "@/features/user/components/dashboard/UserProfileSnapshot";
 import { UserFindBloodBanks } from "@/features/user/components/dashboard/UserFindBloodBanks";
@@ -18,16 +19,19 @@ export function UserDashboardOverview({ data, name }) {
           Good to see you, {name}
         </h1>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
-          Here's a quick overview of your profile and donation activity.
+          Here's a quick overview of your profile, blood requests, and donation activity.
         </p>
       </header>
 
       <div className="mt-8 space-y-8">
+        <UserQuickActions />
         <UserStatusCard profile={profile} />
         <UserSummaryCards data={data} profile={profile} />
-        <UserQuickActions />
+        <div className="grid gap-8 lg:grid-cols-2">
+          <UserBloodRequests data={data} />
+          <UserDonationHistory />
+        </div>
         <UserAvailabilityEligibility data={data} />
-        <UserDonationHistory />
         <UserNotifications />
         <UserProfileSnapshot profile={profile} />
         <UserFindBloodBanks />

@@ -16,17 +16,20 @@
       { "key": "manage-donations", "label": "Manage Donations", "route": "/admin/donations", "icon": "HandHelping" },
       { "key": "assessments", "label": "Assessments", "route": "/admin/assessments", "icon": "ClipboardList", "end": true },
       { "key": "new-assessment", "label": "New Assessment", "route": "/admin/assessments/new", "icon": "PlusCircle" },
-      { "key": "recommend-bank", "label": "Recommend Bank", "route": "/admin/recommend-bank", "icon": "Hospital" }
+      { "key": "recommend-bank", "label": "Recommend Bank", "route": "/admin/recommend-bank", "icon": "Hospital" },
+      { "key": "notifications", "label": "Notifications", "route": "/admin/notifications", "icon": "Bell" }
     ],
     "User": [
       { "key": "dashboard", "label": "Dashboard", "route": "/user", "icon": "LayoutDashboard", "end": true },
-      { "key": "edit-profile", "label": "Edit Profile", "route": "/user/edit-profile", "icon": "Edit" },
-      { "key": "search-banks", "label": "Search Banks", "route": "/user/search-banks", "icon": "Search" },
-      { "key": "search-donors", "label": "Search Donors", "route": "/user/search-donors", "icon": "UserSearch" },
-      { "key": "my-requests", "label": "My Blood Requests", "route": "/user/my-requests", "icon": "ClipboardList" },
-      { "key": "donation-history", "label": "Donation History", "route": "/user/donation-history", "icon": "History" },
-      { "key": "medical-reports", "label": "Medical Reports", "route": "/user/medical-reports", "icon": "FileText" },
-      { "key": "notifications", "label": "Notifications", "route": "/user/notifications", "icon": "Bell" }
+      { "key": "find-donors", "label": "Find Donors", "route": "/user/search-donors", "icon": "UserSearch", "group": "Blood Services" },
+      { "key": "find-banks", "label": "Find Blood Banks", "route": "/user/search-banks", "icon": "Search", "group": "Blood Services" },
+      { "key": "request-blood", "label": "Request Blood", "route": "/user/request-blood", "icon": "Droplet", "group": "Blood Services" },
+      { "key": "donate-blood", "label": "Donate Blood", "route": "/user/donate-blood", "icon": "HeartHandshake", "group": "Donation" },
+      { "key": "my-donations", "label": "My Donations", "route": "/user/donations", "icon": "History", "group": "Donation" },
+      { "key": "my-requests", "label": "My Blood Requests", "route": "/user/requests", "icon": "ClipboardList", "group": "My Activity" },
+      { "key": "medical-reports", "label": "Medical Reports", "route": "/user/medical-reports", "icon": "FileText", "group": "My Activity" },
+      { "key": "notifications", "label": "Notifications", "route": "/user/notifications", "icon": "Bell" },
+      { "key": "profile", "label": "Profile", "route": "/user/profile", "icon": "Edit" }
     ],
     "Blood Bank": [
       { "key": "dashboard", "label": "Dashboard", "route": "/blood-bank", "icon": "LayoutDashboard", "end": true },

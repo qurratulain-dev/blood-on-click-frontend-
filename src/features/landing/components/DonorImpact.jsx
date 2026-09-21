@@ -13,7 +13,7 @@ const JOURNEY_STEPS = [
   {
     number: "01",
     title: "Register",
-    description: "Create your donor profile with your blood group and location.",
+    description: "Create your profile with your blood group and location.",
   },
   {
     number: "02",
@@ -24,7 +24,7 @@ const JOURNEY_STEPS = [
     number: "03",
     title: "Respond",
     description:
-      "When a seeker finds you, coordinate directly to arrange the donation.",
+      "When someone searches for your blood group, coordinate directly to arrange the donation.",
   },
 ];
 
@@ -183,7 +183,7 @@ export function DonorImpact() {
             </h2>
 
             <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:160ms]">
-              Join Blood on Click as a donor, keep your availability updated, and
+              Join Blood on Click, keep your availability updated, and
               stay reachable when your blood group is needed.
             </p>
           </div>
@@ -219,7 +219,7 @@ export function DonorImpact() {
                 className="h-11 w-full gap-2 bg-red-600 px-6 text-base text-white shadow-sm shadow-red-600/30 hover:bg-red-700 sm:w-auto"
               >
                 <Link to="/register?role=user">
-                  Become a Donor
+                  Join &amp; Start Donating
                 </Link>
               </Button>
               <Button
@@ -235,7 +235,7 @@ export function DonorImpact() {
             <p className="mt-6 flex items-start gap-2 text-sm text-muted-foreground motion-safe:animate-fade-up">
               <ShieldCheck className="mt-0.5 size-4 shrink-0 text-red-600" aria-hidden="true" />
               <span>
-                Your donor profile is shared only with signed-in seekers searching
+                Your profile is shared only with signed-in users searching
                 for your blood group.
               </span>
             </p>

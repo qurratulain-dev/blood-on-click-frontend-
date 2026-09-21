@@ -132,7 +132,7 @@ export function BloodBankDashboard() {
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b text-xs uppercase text-muted-foreground">
-                  <th className="pb-2 font-medium">Seeker</th>
+                  <th className="pb-2 font-medium">Requester</th>
                   <th className="pb-2 font-medium">Group</th>
                   <th className="pb-2 font-medium">Units</th>
                   <th className="pb-2 font-medium">Date</th>

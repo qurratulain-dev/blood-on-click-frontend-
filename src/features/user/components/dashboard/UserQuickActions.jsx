@@ -1,30 +1,30 @@
 import { Link } from "react-router-dom";
-import { UserRound, History, Search, Bell, ArrowRight } from "lucide-react";
+import { Droplet, HeartHandshake, UserSearch, Building2, ArrowRight } from "lucide-react";
 
 const ACTIONS = [
   {
-    to: "/user/edit-profile",
-    icon: UserRound,
-    label: "View Profile",
-    description: "Manage your details",
+    to: "/user/request-blood",
+    icon: Droplet,
+    label: "Request Blood",
+    description: "Submit a blood request",
   },
   {
-    to: "/user/donation-history",
-    icon: History,
-    label: "Donation History",
-    description: "Track your donations",
+    to: "/user/donate-blood",
+    icon: HeartHandshake,
+    label: "Donate Blood",
+    description: "Record a donation",
+  },
+  {
+    to: "/user/search-donors",
+    icon: UserSearch,
+    label: "Find Donors",
+    description: "Search available donors",
   },
   {
     to: "/user/search-banks",
-    icon: Search,
-    label: "Search Blood Banks",
+    icon: Building2,
+    label: "Find Blood Banks",
     description: "Find a bank near you",
-  },
-  {
-    to: "/user/notifications",
-    icon: Bell,
-    label: "Notifications",
-    description: "View updates and alerts",
   },
 ];
 

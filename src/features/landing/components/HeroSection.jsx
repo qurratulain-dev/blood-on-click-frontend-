@@ -54,7 +54,7 @@ export function HeroSection() {
               variant="outline"
               className="h-11 w-full px-6 text-base sm:w-auto"
             >
-              <Link to="/register">Become a Donor</Link>
+              <Link to="/register">Join Blood on Click</Link>
             </Button>
           </div>
 

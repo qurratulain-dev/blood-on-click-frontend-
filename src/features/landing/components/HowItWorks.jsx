@@ -61,7 +61,7 @@ const ROLE_PATHS = [
   {
     icon: HandHeart,
     title: "I Want to Donate",
-    description: "Register as a donor, stay discoverable, and donate at a blood bank.",
+    description: "Register, set your availability, and donate at a blood bank.",
     to: "/user/search-banks",
     linkLabel: "Find a blood bank",
   },

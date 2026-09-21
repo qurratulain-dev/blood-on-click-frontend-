@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getDonations, verifyDonation, rejectDonation, moveToPending, uploadMedicalReport } from "@/features/admin/api/admin";
-import { BLOOD_GROUPS } from "@/config/constants";
 import { 
-  Loader2, Clock, CheckCircle, XCircle, Droplet, Upload, FileText,
+  Loader2, Clock, CheckCircle, XCircle, Droplet, Upload,
   Eye, Undo2, FilePlus2, Info
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -19,7 +18,7 @@ const groupColors = {
 const tabs = [
   { key: "pending", icon: Clock, label: "Pending", color: "yellow" },
   { key: "completed", icon: CheckCircle, label: "Completed", color: "green" },
-  { key: "cancelled", icon: XCircle, label: "Cancelled", color: "red" },
+  { key: "rejected", icon: XCircle, label: "Rejected", color: "red" },
 ];
 
 function StatCard({ icon: Icon, label, value, color }) {
@@ -103,13 +102,13 @@ function DonationActions({ donation }) {
   const rejectMut = useMutation({
     mutationFn: () => rejectDonation(donation.id, adminMsg),
     onSuccess: () => { toast.success("Donation rejected"); queryClient.invalidateQueries({ queryKey: ["admin-donations"] }); },
-    onError: (err) => toast.error("Failed to reject"),
+    onError: () => toast.error("Failed to reject"),
   });
 
   const pendingMut = useMutation({
     mutationFn: () => moveToPending(donation.id),
     onSuccess: () => { toast.success("Moved to pending"); queryClient.invalidateQueries({ queryKey: ["admin-donations"] }); },
-    onError: (err) => toast.error("Failed to move"),
+    onError: () => toast.error("Failed to move"),
   });
 
   if (donation.status === "pending") {
@@ -153,10 +152,6 @@ function DonationActions({ donation }) {
           className="inline-flex items-center justify-center gap-1 rounded bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700">
           <FilePlus2 className="size-3" /> Medical Report
         </Link>
-        <button onClick={() => { if (confirm("Move to pending?")) pendingMut.mutate(); }}
-          className="inline-flex items-center justify-center gap-1 rounded bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-yellow-600">
-          <Undo2 className="size-3" /> Move to Pending
-        </button>
       </div>
     );
   }
@@ -178,13 +173,13 @@ function DonationTable({ donations, tab }) {
     return (
       <div className="rounded-xl border bg-white py-16 text-center shadow-sm">
         <p className="text-muted-foreground">
-          {tab === "pending" ? "No pending donations" : tab === "completed" ? "No completed donations" : "No cancelled donations"}
+          {tab === "pending" ? "No pending donations" : tab === "completed" ? "No completed donations" : "No rejected donations"}
         </p>
       </div>
     );
   }
 
-  const cols = tab === "cancelled"
+  const cols = tab === "rejected"
     ? ["ID", "Donor Name", "Contact", "Blood Bank", "Date", "Group", "Units", "Actions"]
     : ["ID", "Donor Name", "Contact", "Blood Bank", "Date", "Group", "Units", "Report", "Actions"];
 
@@ -218,7 +213,7 @@ function DonationTable({ donations, tab }) {
                     </span>
                   </td>
                   <td className="px-3 py-3">{d.quantity} unit(s)</td>
-                  {tab !== "cancelled" && (
+                  {tab !== "rejected" && (
                     <td className="px-3 py-3">
                       {d.has_medical_report ? (
                         <a href={d.medical_report_url} target="_blank" rel="noopener noreferrer"
@@ -232,7 +227,7 @@ function DonationTable({ donations, tab }) {
                   )}
                   <td className="px-3 py-3">
                     <DonationActions donation={d} />
-                    {tab !== "cancelled" && (
+{tab !== "rejected" && (
                       <button onClick={() => setUploadFor(d)}
                         className="mt-1 inline-flex w-full items-center justify-center gap-1 rounded bg-cyan-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-cyan-700">
                         <Upload className="size-3" /> Upload Report
@@ -267,7 +262,7 @@ export function ManageDonations() {
   const statCards = [
     { icon: Clock, label: "Pending Verification", value: counts.pending, color: "text-yellow-600" },
     { icon: CheckCircle, label: "Completed Donations", value: counts.completed, color: "text-green-600" },
-    { icon: XCircle, label: "Cancelled Donations", value: counts.cancelled, color: "text-red-600" },
+    { icon: XCircle, label: "Rejected Donations", value: counts.rejected, color: "text-red-600" },
     { icon: Droplet, label: "Total Units Collected", value: counts.total_units, color: "text-red-600" },
   ];
 
@@ -325,10 +320,10 @@ export function ManageDonations() {
             <strong>How to Manage Donations:</strong>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li><strong>Verify & Complete:</strong> Confirms the donation, updates blood stock, and notifies the donor.</li>
-              <li><strong>Reject:</strong> Cancels the donation record and notifies the donor.</li>
+              <li><strong>Reject:</strong> Rejects the pending donation record and notifies the donor.</li>
               <li><strong>Upload Report:</strong> Add medical reports for donors.</li>
               <li><strong>Generate Report:</strong> Create professional medical report for donor.</li>
-              <li><strong>Move to Pending:</strong> Change status back to pending for review.</li>
+              <li><strong>Move to Pending:</strong> Reopen a rejected donation for review (only available on rejected records).</li>
             </ul>
           </div>
         </div>

@@ -2,21 +2,47 @@ import { NavLink } from "react-router-dom";
 import { useMemo } from "react";
 import {
   LayoutDashboard, Edit, Search, UserSearch, FileText, History, Bell,
-  ClipboardList, LogOut, Droplet,
+  ClipboardList, LogOut, Droplet, HeartHandshake,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { useMenuStore } from "@/stores/menuStore";
 
 const iconMap = {
   LayoutDashboard, Edit, Search, UserSearch, FileText, History, Bell,
-  ClipboardList, LogOut,
+  ClipboardList, LogOut, Droplet, HeartHandshake,
 };
+
+function renderGroupHeader(group) {
+  return (
+    <p
+      key={`group-${group}`}
+      className="px-4 pb-1 pt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-500"
+    >
+      {group}
+    </p>
+  );
+}
 
 export function UserLayout({ children }) {
   const { user, role, logout } = useAuthStore();
   const getSidebar = useMenuStore((s) => s.getSidebar);
 
   const sidebar = useMemo(() => getSidebar(role), [getSidebar, role]);
+
+  const navSections = useMemo(() => {
+    const sections = [];
+    let lastGroup = null;
+    for (const item of sidebar) {
+      const group = item.group || null;
+      if (group && group !== lastGroup) {
+        sections.push({ type: "header", content: group });
+        lastGroup = group;
+      }
+      if (!group) lastGroup = null;
+      sections.push({ type: "link", item });
+    }
+    return sections;
+  }, [sidebar]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100">
@@ -27,7 +53,9 @@ export function UserLayout({ children }) {
         </div>
 
         <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-4">
-          {sidebar.map(({ key, route, label, icon, end }) => {
+          {navSections.map(({ type, content, item }) => {
+            if (type === "header") return renderGroupHeader(content);
+            const { key, route, label, icon, end } = item;
             const Icon = iconMap[icon];
             return (
               <NavLink

@@ -7,7 +7,7 @@ import {
 } from "@/features/user/api/User";
 import { Bell, BellOff, CheckCheck, Trash2, Loader2, RefreshCw, Clock } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export function Notifications() {
   const queryClient = useQueryClient();

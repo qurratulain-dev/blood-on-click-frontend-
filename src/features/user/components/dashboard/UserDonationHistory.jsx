@@ -141,7 +141,7 @@ export function UserDonationHistory() {
           </p>
         </div>
         <Link
-          to="/user/donation-history"
+          to="/user/donations"
           className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-red-600 transition hover:text-red-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
         >
           View full history

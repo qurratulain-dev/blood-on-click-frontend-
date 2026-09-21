@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useMemo } from "react";
 import {
   LayoutDashboard, UserPlus, Users, HandHelping,
-  ClipboardList, PlusCircle, List, Hospital,
+  ClipboardList, PlusCircle, List, Hospital, Bell,
   LogOut, Droplet,
 } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
@@ -10,7 +10,7 @@ import { useMenuStore } from "@/stores/menuStore";
 
 const iconMap = {
   LayoutDashboard, UserPlus, Users, HandHelping,
-  ClipboardList, PlusCircle, List, Hospital,
+  ClipboardList, PlusCircle, List, Hospital, Bell,
 };
 
 export function AdminLayout({ children }) {

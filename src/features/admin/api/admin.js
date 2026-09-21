@@ -98,3 +98,15 @@ export function sendRecommendation(data) {
 export function getDonorAssessmentHistory(userId) {
   return api.get(`/admin/assessments/user/${userId}`);
 }
+
+export function getAdminNotifications() {
+  return api.get("/admin/notifications");
+}
+
+export function markAdminNotificationRead(id) {
+  return api.put(`/admin/notifications/${id}/read`);
+}
+
+export function markAllAdminNotificationsRead() {
+  return api.put("/admin/notifications/read-all");
+}

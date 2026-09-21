@@ -87,7 +87,7 @@ export function UserAvailabilityEligibility({ data }) {
 
       <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-5">
         <Link
-          to="/user/edit-profile"
+          to="/user/profile"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 text-sm font-medium text-white transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
         >
           Update availability

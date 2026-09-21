@@ -5,13 +5,13 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { DashboardStatCard } from "@/components/ui/dashboard-stat-card";
 import {
   Droplet, Heart, Award, Clock, History, Loader2, RefreshCw,
-  PlusCircle, Upload, FileText, Eye, X, CheckCircle,
-  AlertTriangle, Banknote, Calendar, Search,
+  PlusCircle, Upload, FileText, X, CheckCircle,
+  AlertTriangle, Search,
 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
-export function DonationHistory() {
+export function Donations() {
   const queryClient = useQueryClient();
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -129,7 +129,7 @@ export function DonationHistory() {
     <div className="mx-auto max-w-6xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Donation History & Medical Reports</h2>
+          <h2 className="text-2xl font-bold">My Donations</h2>
           <p className="text-sm text-muted-foreground">Track your donations and upload medical reports</p>
         </div>
       </div>

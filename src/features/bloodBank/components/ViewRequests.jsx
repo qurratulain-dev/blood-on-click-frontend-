@@ -48,7 +48,7 @@ export function ViewRequests() {
     if (status === "approved") {
       if (!confirm(`Approve this request for ${details.quantity} unit(s) of ${details.blood_group} blood?`)) return;
     } else if (status === "rejected") {
-      if (!confirm("Are you sure you want to cancel this request?")) return;
+      if (!confirm("Are you sure you want to reject this request?")) return;
     } else if (status === "fulfilled") {
       if (!confirm("Mark this request as completed?")) return;
     }
@@ -90,7 +90,7 @@ export function ViewRequests() {
     { key: "pending", label: "Pending", count: counts.pending },
     { key: "approved", label: "Approved", count: counts.approved },
     { key: "fulfilled", label: "Completed", count: counts.fulfilled },
-    { key: "rejected", label: "Cancelled", count: counts.rejected },
+    { key: "rejected", label: "Rejected", count: counts.rejected },
   ];
 
   return (
@@ -176,7 +176,7 @@ export function ViewRequests() {
                 <thead>
                   <tr className="border-b text-xs uppercase text-muted-foreground">
                     <th className="pb-2 font-medium">ID</th>
-                    <th className="pb-2 font-medium">Seeker</th>
+                    <th className="pb-2 font-medium">Requester</th>
                     <th className="pb-2 font-medium">Contact</th>
                     <th className="pb-2 font-medium">Group</th>
                     <th className="pb-2 font-medium">Units</th>
@@ -243,7 +243,7 @@ export function ViewRequests() {
                               disabled={mutation.isPending}
                               className="flex items-center gap-1 rounded bg-red-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
                             >
-                              <XCircle className="size-3" /> Cancel
+                              <XCircle className="size-3" /> Reject
                             </button>
                           </div>
                         )}
@@ -263,7 +263,7 @@ export function ViewRequests() {
                         )}
                         {r.status === "rejected" && (
                           <span className="inline-flex items-center gap-1 text-xs text-red-400">
-                            <XCircle className="size-3" /> Cancelled
+                            <XCircle className="size-3" /> Rejected
                           </span>
                         )}
                       </td>

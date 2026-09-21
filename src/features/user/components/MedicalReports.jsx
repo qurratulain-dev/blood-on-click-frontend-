@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getDonations, uploadDonationReport } from "@/features/user/api/User";
 import { GROUP_COLORS } from "@/config/constants";
-import { Loader2, FileText, Upload, X, RefreshCw, Download, AlertCircle } from "lucide-react";
+import { Loader2, FileText, Upload, X, Download, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export function MedicalReports() {
   const queryClient = useQueryClient();

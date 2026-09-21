@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getNotifications, markNotificationRead } from "@/features/bloodBank/api/bloodBank";
 import { Bell, CheckCheck, Loader2, Clock } from "lucide-react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export function BankNotifications() {
   const queryClient = useQueryClient();

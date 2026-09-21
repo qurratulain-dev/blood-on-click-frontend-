@@ -4,7 +4,7 @@ import { BLOOD_GROUPS, GROUP_COLORS } from "@/config/constants";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Droplet, Loader2, Save, Clock, CheckCircle, Info } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 const stockStatus = (qty) => {
   if (qty < 10) return { badge: "Critical", desc: "Need Immediate Donation", variant: "critical" };

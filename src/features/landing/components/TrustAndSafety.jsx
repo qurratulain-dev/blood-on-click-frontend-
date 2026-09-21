@@ -11,7 +11,7 @@ const CAPABILITIES = [
     icon: KeyRound,
     title: "Role-aware access",
     caption:
-      "Donors, seekers, blood banks, and admins each operate from a guarded, role-scoped account.",
+      "Users, blood banks, and admins each operate from a guarded, role-scoped account.",
   },
   {
     icon: GitCommitHorizontal,
@@ -29,7 +29,7 @@ const CAPABILITIES = [
     icon: Bell,
     title: "Updates at every step",
     caption:
-      "Seekers, donors, and banks receive in-app notifications when requests or donations change status.",
+      "Users and banks receive in-app notifications when requests or donations change status.",
   },
 ];
 
@@ -64,14 +64,14 @@ export function TrustAndSafety() {
 
             <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground motion-safe:animate-fade-up motion-safe:[animation-delay:160ms]">
               Every part of the process runs through signed-in accounts and
-              defined steps, so donors, seekers, and blood banks always know
+              defined steps, so users and blood banks always know
               where things stand.
             </p>
 
             <div className="mt-8 flex items-start gap-2.5 rounded-xl border border-border/60 bg-white p-4 motion-safe:animate-fade-up motion-safe:[animation-delay:240ms]">
               <Info className="mt-0.5 size-4 shrink-0 text-red-600" aria-hidden="true" />
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Search is limited to signed-in Seeker accounts. Blood on Click
+                Search is limited to signed-in user accounts. Blood on Click
                 does not make medical eligibility decisions — final suitability
                 is confirmed by professionals during donation.
               </p>

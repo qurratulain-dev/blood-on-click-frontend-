@@ -20,6 +20,7 @@ import { GenerateReport } from "@/features/admin/components/GenerateReport";
 import { ManageDonations } from "@/features/admin/components/ManageDonations";
 import { ManageUsers } from "@/features/admin/components/ManageUsers";
 import { RecommendBloodBank } from "@/features/admin/components/RecommendBloodBank";
+import { AdminNotifications } from "@/features/admin/components/AdminNotifications";
 import { BloodBankDashboard } from "@/features/bloodBank/components/BloodBankDashboard";
 import { EditProfile } from "@/features/bloodBank/components/EditProfile";
 import { ManageStock } from "@/features/bloodBank/components/ManageStock";
@@ -27,13 +28,15 @@ import { ViewRequests } from "@/features/bloodBank/components/ViewRequests";
 import { BankNotifications } from "@/features/bloodBank/components/Notifications";
 import { Reports } from "@/features/bloodBank/components/Reports";
 import { UserDashboard } from "@/features/user/components/UserDashboard";
-import { DonationHistory } from "@/features/user/components/DonationHistory";
-import { EditProfile as UserEditProfile } from "@/features/user/components/EditProfile";
+import { Donations } from "@/features/user/components/Donations";
+import { Profile as UserProfile } from "@/features/user/components/Profile";
 import { SearchBanks } from "@/features/user/components/SearchBanks";
 import { SearchUsers } from "@/features/user/components/SearchUsers";
-import { MyBloodRequests } from "@/features/user/components/MyBloodRequests";
+import { BloodRequests } from "@/features/user/components/BloodRequests";
 import { MedicalReports } from "@/features/user/components/MedicalReports";
 import { Notifications as UserNotifications } from "@/features/user/components/Notifications";
+import { RequestBlood } from "@/features/user/components/RequestBlood";
+import { DonateBlood } from "@/features/user/components/DonateBlood";
 import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 const router = createBrowserRouter([
@@ -72,6 +75,7 @@ const router = createBrowserRouter([
       { path: "/admin/assessments/new", element: <NewAssessment /> },
       { path: "/admin/assessments/:id", element: <ViewAssessment /> },
       { path: "/admin/recommend-bank", element: <RecommendBloodBank /> },
+      { path: "/admin/notifications", element: <AdminNotifications /> },
     ],
   },
   {
@@ -101,11 +105,13 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "/user", element: <UserDashboard /> },
-      { path: "/user/edit-profile", element: <UserEditProfile /> },
+      { path: "/user/profile", element: <UserProfile /> },
       { path: "/user/search-banks", element: <SearchBanks /> },
       { path: "/user/search-donors", element: <SearchUsers /> },
-      { path: "/user/my-requests", element: <MyBloodRequests /> },
-      { path: "/user/donation-history", element: <DonationHistory /> },
+      { path: "/user/request-blood", element: <RequestBlood /> },
+      { path: "/user/donate-blood", element: <DonateBlood /> },
+      { path: "/user/requests", element: <BloodRequests /> },
+      { path: "/user/donations", element: <Donations /> },
       { path: "/user/medical-reports", element: <MedicalReports /> },
       { path: "/user/notifications", element: <UserNotifications /> },
     ],
